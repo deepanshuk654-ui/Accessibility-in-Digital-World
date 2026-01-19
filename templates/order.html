@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Order Successful | ElectroMart</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='accessease.css') }}">
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f3f3f3;
+        text-align: center;
+    }
+
+    /* HEADER */
+    .header {
+        background: #131921;
+        padding: 15px;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .header a {
+        color: white;
+        text-decoration: none;
+        margin-right: 20px;
+        font-size: 18px;
+    }
+    .header .logo a {
+        font-size: 26px;
+        font-weight: bold;
+    }
+
+    /* SUCCESS BOX */
+    .success-container {
+        background: white;
+        width: 50%;
+        margin: 40px auto;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px #bdbdbd;
+        animation: fadeIn 1s ease;
+    }
+
+    /* CHECK ICON */
+    .tick {
+        font-size: 90px;
+        color: #28a745;
+        animation: pop 0.5s ease;
+    }
+
+    @keyframes pop {
+        0% { transform: scale(0); }
+        100% { transform: scale(1); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0px); }
+    }
+
+    .success-title {
+        font-size: 28px;
+        font-weight: bold;
+        margin-top: 15px;
+    }
+
+    .order-text {
+        font-size: 18px;
+        color: #444;
+        margin-top: 10px;
+    }
+
+    .order-id {
+        font-size: 20px;
+        margin-top: 15px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    /* BUTTONS */
+    .btn-container {
+        margin-top: 25px;
+    }
+    .btn {
+        padding: 12px 25px;
+        border-radius: 6px;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        margin: 10px;
+    }
+    .order-btn {
+        background: #28a745;
+        color: white;
+    }
+
+    /* FOOTER */
+    .footer {
+        background: #131921;
+        padding: 15px;
+        text-align: center;
+        color: white;
+        margin-top: 50px;
+    }
+       
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="logo"><a href="{{ url_for('home') }}">ElectroMart</a></div>
+    <div>
+        <a href="{{ url_for('product') }}">Products</a>
+        <a href="{{ url_for('cart') }}">Cart</a>
+        <a href="{{ url_for('signup') }}">Login</a>
+    </div>
+</div>
+
+<!-- SUCCESS BOX -->
+<div class="success-container">
+    <div class="tick">✔</div>
+    <div class="success-title">Order Placed Successfully!</div>
+
+    <div class="order-text">
+        Thank you for shopping with <b>ElectroMart</b>.<br>
+        Your order has been confirmed and will be delivered soon.
+    </div>
+
+    <div class="order-id">
+        Order ID : <span>#EM12345678</span>
+    </div>
+
+    <div class="btn-container">
+     
+      <a href="{{ url_for('track') }}">
+        <button class="btn order-btn">Track Order</button> </a>  
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    © 2025 ElectroMart | All Rights Reserved
+</div>
+<!-- Accessibility Toolbar -->
+<div id="accessibility-toolbar">
+  <button onclick="readPage()" title="Read Page">🔊 Read</button>
+  <button onclick="stopSpeak()" title="Stop Speaking">🛑 Stop</button>
+  <button onclick="changeFontSize('increase')" title="Increase Font Size">A+</button>
+  <button onclick="changeFontSize('decrease')" title="Decrease Font Size">A-</button>
+  <button onclick="toggleHighContrast()" title="Toggle High Contrast">🌗 Contrast</button>
+  <button onclick="startVoiceCommands()" title="Start Voice Commands">🎤 Voice</button>
+  <button onclick="showSignLanguageHelp()" title="Show Sign Language Help">🤟 Sign</button>
+</div>
+
+<script>
+    const FLASK_URLS = {
+        home: "{{ url_for('home') }}",
+        signup: "{{ url_for('signup') }}",
+        admin: "{{ url_for('admin') }}",
+        cart: "{{ url_for('cart') }}",
+        checkout: "{{ url_for('checkout') }}",
+        order: "{{ url_for('order') }}",
+        track: "{{ url_for('track') }}",
+        product: "{{ url_for('product') }}",
+        mobile: "{{ url_for('mobile') }}",
+        laptop: "{{ url_for('laptop') }}",
+        watch: "{{ url_for('watch') }}",
+        earbuds: "{{ url_for('earbuds') }}",
+        speaker: "{{ url_for('speaker') }}"
+    };
+</script>
+
+<script src="{{ url_for('static', filename='accessease.js') }}"></script>
+</body>
+</html>

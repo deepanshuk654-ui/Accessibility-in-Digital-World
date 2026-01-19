@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ElectroMart | Bluetooth Speaker</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='accessease.css') }}">
+</head>
+
+<body style="margin:0; font-family:Arial; background:#f2f2f2;">
+
+  <!-- HEADER -->
+  <header
+    style="position:sticky;top:0;z-index:200; background:#232f3e; padding:12px 20px; color:white; display:flex; align-items:center; justify-content:space-between;">
+    <div style="display:flex; align-items:center;">
+      <h2 style="margin:0;">🛒ElectroMart</h2>
+    </div>
+
+    <div style="display:flex; width:40%; background:white; border-radius:4px; overflow:hidden;">
+      <input type="text" placeholder="Search products..." style="flex:1; padding:8px; border:none; outline:none;">
+      <button style="background:#febd69; border:none; padding:8px 15px; cursor:pointer;">🔍</button>
+    </div>
+
+    <div>
+      <a href="{{ url_for('home') }}" style="color:white; margin-right:20px; text-decoration:none;">Home</a>
+      <a href="{{ url_for('product') }}" style="color:white; margin-right:20px; text-decoration:none;">Products</a>
+
+    </div>
+  </header>
+
+
+  <div style="display:flex; padding:30px; background:white; margin:20px; border-radius:6px;">
+    <div style="width:40%; text-align:center;">
+      <img src="https://m.media-amazon.com/images/I/71+eXkSa8VL.jpg" style="width:75%; border-radius:10px;">
+    </div>
+
+    <div style="width:60%; padding-left:40px;">
+      <h2>JBL Go 3 Bluetooth Speaker (Deep Bass, Waterproof)</h2>
+      <p style="color:green;">⭐⭐⭐⭐☆ (4.4 / 5) | 45,320 Ratings</p>
+      <h1 style="color:#b12704;">₹2,299</h1>
+
+      <p>Experience powerful bass in a portable body. Water-resistant IP67 rating makes it ideal for travel.</p>
+
+      <a href="{{ url_for('cart') }}"
+        style="background:#febd69; padding:12px 30px; border-radius:6px; text-decoration:none; color:black;">Add to
+        Cart</a>
+      <a href="{{ url_for('checkout') }}"
+        style="background:#ff9900; padding:12px 30px; border-radius:6px; margin-left:10px; text-decoration:none; color:black;">Buy
+        Now</a>
+    </div>
+  </div>
+
+  <div style="background:white; margin:20px; padding:20px;">
+    <h2>Technical Specifications</h2>
+    <table style="width:100%; border-collapse:collapse;">
+      <tr>
+        <td><b>Brand</b></td>
+        <td>JBL</td>
+      </tr>
+      <tr>
+        <td><b>Battery</b></td>
+        <td>5 Hours</td>
+      </tr>
+      <tr>
+        <td><b>Waterproof</b></td>
+        <td>IP67</td>
+      </tr>
+      <tr>
+        <td><b>Bluetooth</b></td>
+        <td>v5.1</td>
+      </tr>
+      <tr>
+        <td><b>Frequency</b></td>
+        <td>110Hz–20kHz</td>
+      </tr>
+    </table>
+  </div>
+
+  <footer style="background:#232f3e; padding:20px; color:white; text-align:center;">
+    © 2025 ElectroMart
+  </footer>
+  <!-- Accessibility Toolbar -->
+  <div id="accessibility-toolbar">
+    <button onclick="readPage()" title="Read Page">🔊 Read</button>
+    <button onclick="stopSpeak()" title="Stop Speaking">🛑 Stop</button>
+    <button onclick="changeFontSize('increase')" title="Increase Font Size">A+</button>
+    <button onclick="changeFontSize('decrease')" title="Decrease Font Size">A-</button>
+    <button onclick="toggleHighContrast()" title="Toggle High Contrast">🌗 Contrast</button>
+    <button onclick="startVoiceCommands()" title="Start Voice Commands">🎤 Voice</button>
+    <button onclick="showSignLanguageHelp()" title="Show Sign Language Help">🤟 Sign</button>
+  </div>
+
+<script>
+    const FLASK_URLS = {
+        home: "{{ url_for('home') }}",
+        signup: "{{ url_for('signup') }}",
+        admin: "{{ url_for('admin') }}",
+        cart: "{{ url_for('cart') }}",
+        checkout: "{{ url_for('checkout') }}",
+        order: "{{ url_for('order') }}",
+        track: "{{ url_for('track') }}",
+        product: "{{ url_for('product') }}",
+        mobile: "{{ url_for('mobile') }}",
+        laptop: "{{ url_for('laptop') }}",
+        watch: "{{ url_for('watch') }}",
+        earbuds: "{{ url_for('earbuds') }}",
+        speaker: "{{ url_for('speaker') }}"
+    };
+</script>
+
+<script src="{{ url_for('static', filename='accessease.js') }}"></script>
+</body>
+
+</html>

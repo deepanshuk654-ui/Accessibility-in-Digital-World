@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ElectroMart - Home</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='accessease.css') }}">
+  <!-- Font Awesome (icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="shortcut icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThQe_VTxPwxlSz2kxIJzqkI7qhvv2qiie5Pw&s" type="image/x-icon">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Inter, Arial, sans-serif
+    }
+
+    body {
+      background: #f3f5f7;
+      color: #222;
+      line-height: 1.35
+    }
+
+    /* ---------- HEADER ---------- */
+    header.app-header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: #232f3e;
+      border-bottom: 1px solid #e6e9ee;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 180px
+    }
+
+    .brand img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain
+    }
+
+    .brand h1 {
+      font-size: 20px;
+      color: white;
+      margin: 0;
+      font-weight: 700
+    }
+
+    /* search */
+    .search-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0
+    }
+
+    .search-wrap input {
+      width: 50%;
+      padding: 10px 14px;
+      border: 1px solid #d6dbe6;
+      border-right: none;
+      border-radius: 6px 0 0 6px;
+      font-size: 15px;
+      background: #fff;
+    }
+
+    .search-wrap button {
+      background: #ff9f00;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+      cursor: pointer;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    /* header right */
+    .hdr-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-width: 200px;
+      justify-content: flex-end
+    }
+
+    .hdr-actions a {
+      color: white;
+      text-decoration: none;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .hdr-actions .cart-bubble {
+      background: #ff3b30;
+      color: #fff;
+      border-radius: 50%;
+      padding: 2px 8px;
+      font-size: 12px;
+      margin-left: 6px
+    }
+
+    /* ---------- CATEGORIES NAV ---------- */
+    nav.cat-nav {
+      margin-top: 10px;
+      background: #fff;
+      padding: 12px 8px;
+      border-bottom: 1px solid #e6e9ee;
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+    }
+
+    nav.cat-nav .cat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-align: center;
+      min-width: 92px;
+      color: #333;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    nav.cat-nav .cat img {
+      width: 58px;
+      height: 58px;
+      border-radius: 10px;
+      object-fit: cover;
+      background: #fff;
+      padding: 6px;
+      border: 1px solid #eee
+    }
+
+    nav.cat-nav .cat p {
+      margin: 0
+    }
+
+    /* ---------- MAIN / BANNERS ---------- */
+    main.container {
+      max-width: 1200px;
+      margin: 18px auto;
+      padding: 0 16px
+    }
+
+    .main-banner {
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(20, 30, 60, 0.06)
+    }
+
+    .main-banner img {
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      display: block
+    }
+
+    .second-banner {
+      margin-top: 18px;
+      background: #fff;
+      padding: 14px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 6px 18px rgba(20, 30, 60, 0.04);
+    }
+
+    .second-banner .title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #111
+    }
+
+    .second-banner .sub {
+      color: #666;
+      font-size: 14px
+    }
+
+    /* ---------- TOP DEALS (scrollable row) ---------- */
+    .deals {
+      margin-top: 18px;
+      background: #fff;
+      padding: 16px;
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(20, 30, 60, 0.04);
+    }
+
+    .deals h3 {
+      margin-bottom: 12px;
+      font-size: 18px;
+      color: #111
+    }
+
+    .deals-row {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 6px
+    }
+
+    .deal-card {
+      min-width: 210px;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .deal-card img {
+      width: 170px;
+      height: 140px;
+      object-fit: contain;
+      margin: 0 auto;
+      display: block
+    }
+
+    .deal-card h4 {
+      font-size: 15px;
+      margin: 8px 0 4px
+    }
+
+    .deal-card .price {
+      color: #0a8a3a;
+      font-weight: 700
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer.site-footer {
+      margin-top: 22px;
+      background: #0b1220;
+      color: #cfe0ff;
+      padding: 26px 18px;
+      border-radius: 10px
+    }
+
+    .footer-grid {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 0 auto
+    }
+
+    .footer-col {
+      min-width: 180px
+    }
+
+    .footer-col h5 {
+      color: #fff;
+      margin-bottom: 10px;
+      font-size: 15px
+    }
+
+    .footer-col ul {
+      list-style: none;
+      padding: 0
+    }
+
+    .footer-col li {
+      margin-bottom: 8px;
+      color: #cbd8ff;
+      font-size: 14px
+    }
+
+    .socials {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px
+    }
+
+    .socials a {
+      color: #fff;
+      font-size: 18px;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 8px;
+      border-radius: 6px
+    }
+
+    .copyright {
+      margin-top: 18px;
+      text-align: center;
+      color: #a8bbdf;
+      font-size: 13px
+    }
+
+    /* ---------- Responsiveness ---------- */
+    @media (max-width:900px) {
+      .main-banner img {
+        height: 260px
+      }
+
+      .search-wrap input {
+        font-size: 14px
+      }
+    }
+
+    @media (max-width:640px) {
+      header.app-header {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px
+      }
+
+      .search-wrap {
+        order: 3;
+        width: 100%;
+        margin-top: 6px
+      }
+
+      .brand {
+        min-width: auto
+      }
+
+      nav.cat-nav {
+        gap: 12px;
+        padding: 8px
+      }
+
+      .main-banner img {
+        height: 200px
+      }
+
+      .deal-card {
+        min-width: 160px
+      }
+
+      footer.site-footer {
+        padding: 18px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="brand">
+
+      <h1>🛒ElectroMart</h1>
+    </div>
+
+    <div class="search-wrap" role="search" aria-label="Site search">
+      <input type="search" placeholder="Search for products, brands and more">
+      <button aria-label="Search"><i class="fa fa-search"></i></button>
+    </div>
+
+    <div class="hdr-actions" aria-hidden="false">
+      <a href="{{ url_for('signup') }}"><i class="fa fa-user"></i> Login</a>
+      <a href="{{ url_for('admin') }}"><i class="fa fa-admin"></i>Admin</a>
+      <a href="{{ url_for('cart') }}" style="position:relative"><i class="fa fa-shopping-cart"></i> Cart</a>
+    </div>
+  </header>
+
+  <!-- CATEGORIES NAV -->
+  <nav class="cat-nav" aria-label="Product categories">
+    <a class="cat" href="{{ url_for('mobile') }}">
+      <img
+        src="https://in-exstatic-vivofs.vivo.com/gdHFRinHEMrj3yPG/1722858595146/cb4084383c668a7ca2ceb7c96b45a86b.png">
+      <p>Mobiles</p>
+    </a>
+
+    <a class="cat" href="{{ url_for('laptop') }}">
+      <!-- laptop icon / image -->
+      <img
+        src="https://media-ik.croma.com/prod/https://media.tatacroma.com/Croma%20Assets/Computers%20Peripherals/Laptop/Images/308510_0_AtEApplhN.png?updatedAt=1762329440810"
+        alt="Laptops">
+      <p>Laptops</p>
+    </a>
+
+    <a class="cat" href="{{ url_for('watch') }}">
+      <img
+        src="https://www.maximawatches.com/cdn/shop/files/69100CMGY-A_79d56a17-b371-4bba-9086-cbce49e8de86.jpg?v=1739601173">
+      <p>Watches</p>
+    </a>
+
+    <a class="cat" href="{{ url_for('earbuds') }}">
+      <img src="https://www.boat-lifestyle.com/cdn/shop/files/ACCG6DS7WDJHGWSH_0_1024x.png?v=1727669669">
+      <p>Earbuds</p>
+    </a>
+
+    <a class="cat" href="{{ url_for('speaker') }}">
+      <img src="https://m.media-amazon.com/images/I/713TUYjagQL.jpg">
+      <p>Speakers</p>
+    </a>
+  </nav>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="container">
+
+    <!-- MAIN BANNER (uses uploaded image when available, otherwise fallback) -->
+    <section class="main-banner" aria-label="Main promotional banner">
+      <img
+        src="https://t4.ftcdn.net/jpg/06/91/17/95/360_F_691179587_QSctAaNAIbYMjexjEV3w8clmvzcXmJuU.jpg">
+
+    </section>
+
+    <!-- SECOND BANNER (Top Deals Headline) -->
+    <section class="second-banner" role="region" aria-label="Top deals banner">
+      <div style="flex:1">
+        <div class="title">Top Deals on Electronics</div>
+        <div class="sub">Daily discounts on phones, laptops, earphones and speakers — limited time offers</div>
+      </div>
+      <div style="width:160px;text-align:right">
+        <img src="https://cdn-icons-png.flaticon.com/512/888/888879.png" alt="deals"
+          style="height:72px;object-fit:contain">
+      </div>
+    </section>
+
+    <!-- TOP DEALS SCROLLABLE ROW (includes explicit laptop + bluetooth images) -->
+    <section class="deals" aria-label="Top deals products">
+      <h3>Top Deals</h3>
+
+      <div class="deals-row" role="list">
+        <!-- Laptop card -->
+        <article class="deal-card" role="listitem">
+          <a style="color: black;text-decoration: none;" href="{{ url_for('product') }}"><img
+              src="https://m.media-amazon.com/images/I/81fvJauBWDL.jpg">
+            <h4>Lenovo IdeaPad Slim 3 Intel Core i5 12th Gen </h4>
+          </a>
+          <div class="price">₹54,990</div></a>
+
+        </article>
+
+        <!-- Bluetooth Earbuds / true wireless -->
+        <article class="deal-card" role="listitem">
+          <a style="color: black;text-decoration: none;" href="https://www.flipkart.com/oppo-a74-5g-black-fluid-black-128-gb/p/itm93519bec12f5e"><img
+              src="https://m.media-amazon.com/images/I/71geVdy6-OS._SL1500_.jpg">
+            <h4>SmartPhones</h4>
+            <div class="price">₹12,999</div>
+          </a>
+        </article>
+
+        <!-- Bluetooth Speaker -->
+        <article class="deal-card" role="listitem">
+          <a style="color: black;text-decoration: none;" href="https://www.flipkart.com/sony-srs-xb100-portable-supercompact-waterproof-16hrs-battery-extra-bass-built-in-mic-bluetooth-speaker/p/itmb528358f9784e?pid=ACCGR5NXSZBHR3CY&lid=LSTACCGR5NXSZBHR3CYXHKS22&marketplace=FLIPKART&store=0pm%2F0o7&srno=b_1_5&otracker=browse&fm=organic&iid=20790b70-314e-44a0-89a4-d7b97809110c.ACCGR5NXSZBHR3CY.SEARCH&ppt=sp&ppn=productListView&ssid=k9e3tipr7k0000001765018065479"><img
+              src="https://pyxis.nymag.com/v1/imgs/138/e02/bd36028d5e1a49fa05211d7fe6ea13ffaf.rdeep-vertical.w245.jpg">
+            <h4>Portable Bluetooth Speaker</h4>
+            <div class="price">₹799</div>
+          </a>
+        </article>
+
+        <!-- Smartwatch -->
+        <article class="deal-card" role="listitem">
+          <a style="color: black;text-decoration: none;" href="https://www.flipkart.com/fastrack-revoltt-xr1-1-38-bt-calling-fast-charge-100-sports-mode-ip68-calculator-fashion-smartwatch/p/itm470880e507472?pid=SMWH3PYZTJQGMHFH&lid=LSTSMWH3PYZTJQGMHFHDHNBXS&marketplace=FLIPKART&store=ajy%2Fbuh&srno=b_1_13&otracker=browse&fm=organic&iid=e402eab0-b57c-42d0-87b0-518628a09469.SMWH3PYZTJQGMHFH.SEARCH&ppt=browse&ppn=browse&ssid=hfqkdiehe80000001765018303414"> <img
+              src="https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/product/1756376291345/zip/img/webp/section13-pic1-mb.jpg.webp">
+            <h4>Smart Watch</h4>
+            <div class="price">₹1,499</div>
+          </a>
+        </article>
+
+        <!-- Powerbank -->
+        <article class="deal-card" role="listitem">
+          <a style="color: black;text-decoration: none;" href="https://www.flipkart.com/boat-10000-mah-22-5-w-wired-wireless-magsafe-power-bank/p/itm415d9c8dec5d2?pid=PWBHB98VHJZ94MRN&lid=LSTPWBHB98VHJZ94MRNLDTELL&marketplace=FLIPKART&store=tyy%2F4mr%2Ffu6&srno=b_1_1&otracker=browse&fm=organic&iid=en_YSMT_OcgGEDd6zZlNHNVBg5iaie4uoWLpVOYhfOddRtfzb_pzDNb-gYsuuW2bqxVzby0TEk6eiePSRbfR5dRzA%3D%3D&ppt=browse&ppn=browse&ssid=d54ehusbhc0000001765018385886"><img
+              src="https://acefast.com/wp-content/uploads/2025/05/acefast-m21-power-bank.jpg">
+            <h4>Fast Charge Powerbank</h4>
+            <div class="price">₹699</div>
+          </a>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h5>About ElectroMart</h5>
+        <ul>
+          <li>About us</li>
+          <li>Careers</li>
+          <li>Press</li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Help & Support</h5>
+        <ul>
+          <li>Payment</li>
+          <li>Shipping</li>
+          <li>Returns & Refunds</li>
+          <li>FAQ</li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Popular Categories</h5>
+        <ul>
+          <li>Mobiles</li>
+          <li>Laptops</li>
+          <li>Speakers</li>
+          <li>Headphones</li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Follow Us</h5>
+        <div class="socials" aria-hidden="false">
+          <a href="https://www.facebook.com/" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/" title="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="https://www.twitter.com/" title="Twitter"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright">
+      © 2025 ElectroMart • All rights reserved • Made with ♥
+    </div>
+  </footer>
+  <!-- Accessibility Toolbar -->
+  <div id="accessibility-toolbar">
+    <button onclick="readPage()" title="Read Page">🔊 Read</button>
+    <button onclick="stopSpeak()" title="Stop Speaking">🛑 Stop</button>
+    <button onclick="changeFontSize('increase')" title="Increase Font Size">A+</button>
+    <button onclick="changeFontSize('decrease')" title="Decrease Font Size">A-</button>
+    <button onclick="toggleHighContrast()" title="Toggle High Contrast">🌗 Contrast</button>
+    <button onclick="startVoiceCommands()" title="Start Voice Commands">🎤 Voice</button>
+    <button onclick="showSignLanguageHelp()" title="Show Sign Language Help">🤟 Sign</button>
+  </div>
+
+  <script>
+    const FLASK_URLS = {
+        home: "{{ url_for('home') }}",
+        signup: "{{ url_for('signup') }}",
+        admin: "{{ url_for('admin') }}",
+        cart: "{{ url_for('cart') }}",
+        checkout: "{{ url_for('checkout') }}",
+        order: "{{ url_for('order') }}",
+        track: "{{ url_for('track') }}",
+        product: "{{ url_for('product') }}",
+        mobile: "{{ url_for('mobile') }}",
+        laptop: "{{ url_for('laptop') }}",
+        watch: "{{ url_for('watch') }}",
+        earbuds: "{{ url_for('earbuds') }}",
+        speaker: "{{ url_for('speaker') }}"
+    };
+</script>
+
+<script src="{{ url_for('static', filename='accessease.js') }}"></script>
+  
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ElectroMart | Checkout & Payment</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='accessease.css') }}">
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #eef0f1;
+    }
+
+    /* HEADER */
+    .header {
+        background: #131921;
+        color: white;
+        padding: 15px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .header a {
+        color: white;
+        text-decoration: none;
+        margin-left: 20px;
+        font-size: 18px;
+    }
+    .logo a {
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    /* MAIN CONTAINER */
+    .checkout-container {
+        display: flex;
+        width: 90%;
+        margin: 30px auto;
+        gap: 20px;
+    }
+
+    /* LEFT SIDE */
+    .left-box {
+        width: 65%;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 6px #ccc;
+    }
+
+    h2 {
+        margin-top: 0;
+        font-size: 24px;
+        color: #333;
+    }
+
+    /* ADDRESS BOX */
+    .address-box, .payment-box {
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        margin-bottom: 25px;
+        background: #fafafa;
+    }
+
+    label {
+        font-weight: bold;
+        margin-top: 10px;
+        display: block;
+    }
+
+    input[type="text"], textarea, select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    textarea {
+        height: 60px;
+    }
+
+    /* PAYMENT METHODS */
+    .payment-option {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+    }
+
+    .payment-option input {
+        margin-right: 10px;
+    }
+
+    /* RIGHT SIDE ORDER SUMMARY */
+    .right-box {
+        width: 30%;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 6px #ccc;
+        height: auto;
+    }
+
+    .summary-title {
+        font-size: 22px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 18px;
+    }
+
+    .place-btn {
+        margin-top: 20px;
+        width: 100%;
+        padding: 15px;
+        border: none;
+        background: orange;
+        font-size: 20px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    /* FOOTER */
+    .footer {
+        margin-top: 40px;
+        background: #131921;
+        padding: 15px;
+        text-align: center;
+        color: white;
+    }
+     
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="logo"><a href="{{ url_for('home') }}">🛒ElectroMart</a></div>
+    <div>
+        <a href="{{ url_for('product') }}">Products</a>
+        <a href="{{ url_for('cart') }}">Cart</a>
+        <a href="{{ url_for('signup') }}">Login</a>
+    </div>
+</div>
+
+<!-- MAIN CHECKOUT BODY -->
+<div class="checkout-container">
+
+    <!-- LEFT SIDE -->
+    <div class="left-box">
+
+        <!-- ADDRESS SECTION -->
+        <h2>Delivery Address</h2>
+        <div class="address-box">
+            <label>Full Name</label>
+            <input type="text" placeholder="Enter your name">
+
+            <label>Mobile Number</label>
+            <input type="text" placeholder="Enter mobile number">
+
+            <label>Address</label>
+            <textarea placeholder="Enter full address"></textarea>
+
+            <label>City</label>
+            <input type="text" placeholder="Enter city name">
+
+            <label>Pincode</label>
+            <input type="text" placeholder="Enter pincode">
+        </div>
+
+        <!-- PAYMENT SECTION -->
+        <h2>Payment Method</h2>
+        <div class="payment-box">
+
+            <div class="payment-option">
+                <input type="radio" name="payment" checked> Cash on Delivery (COD)
+            </div>
+
+            <div class="payment-option">
+                <input type="radio" name="payment"> UPI (Google Pay / PhonePe / Paytm)
+                <input type="text" placeholder="Enter UPI ID (optional)">
+            </div>
+
+            <div class="payment-option">
+                <input type="radio" name="payment"> Credit / Debit Card  
+                <input type="text" placeholder="Card Number">
+                <input type="text" placeholder="MM/YY">
+                <input type="text" placeholder="CVV">
+            </div>
+
+            <div class="payment-option">
+                <input type="radio" name="payment"> Net Banking
+                <select>
+                    <option>Select Bank</option>
+                    <option>HDFC Bank</option>
+                    <option>SBI Bank</option>
+                    <option>ICICI Bank</option>
+                    <option>Axis Bank</option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE SUMMARY -->
+    <div class="right-box">
+        <div class="summary-title">Order Summary</div>
+
+        <div class="price-row"><span>Items:</span><span>₹ 54,999</span></div>
+        <div class="price-row"><span>Delivery:</span><span style="color:green;">FREE</span></div>
+        <div class="price-row" style="font-weight: bold; border-top:1px solid #ddd; padding-top:12px;">
+            <span>Total Amount:</span><span>₹ 54,999</span>
+        </div>
+
+        <a href="{{ url_for('order') }}"><button class="place-btn" onclick="window.location.href='order-success.html'">
+            Place Order
+        </button></a>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    © 2025 ElectroMart | Secure Payments | All Rights Reserved
+</div>
+<!-- Accessibility Toolbar -->
+<div id="accessibility-toolbar">
+  <button onclick="readPage()" title="Read Page">🔊 Read</button>
+  <button onclick="stopSpeak()" title="Stop Speaking">🛑 Stop</button>
+  <button onclick="changeFontSize('increase')" title="Increase Font Size">A+</button>
+  <button onclick="changeFontSize('decrease')" title="Decrease Font Size">A-</button>
+  <button onclick="toggleHighContrast()" title="Toggle High Contrast">🌗 Contrast</button>
+  <button onclick="startVoiceCommands()" title="Start Voice Commands">🎤 Voice</button>
+  <button onclick="showSignLanguageHelp()" title="Show Sign Language Help">🤟 Sign</button>
+</div>
+
+<script>
+    const FLASK_URLS = {
+        home: "{{ url_for('home') }}",
+        signup: "{{ url_for('signup') }}",
+        admin: "{{ url_for('admin') }}",
+        cart: "{{ url_for('cart') }}",
+        checkout: "{{ url_for('checkout') }}",
+        order: "{{ url_for('order') }}",
+        track: "{{ url_for('track') }}",
+        product: "{{ url_for('product') }}",
+        mobile: "{{ url_for('mobile') }}",
+        laptop: "{{ url_for('laptop') }}",
+        watch: "{{ url_for('watch') }}",
+        earbuds: "{{ url_for('earbuds') }}",
+        speaker: "{{ url_for('speaker') }}"
+    };
+</script>
+
+<script src="{{ url_for('static', filename='accessease.js') }}"></script>
+</body>
+</html>

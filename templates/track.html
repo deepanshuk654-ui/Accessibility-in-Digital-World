@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ElectroMart | Track Order</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='accessease.css') }}">
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #eef0f1;
+    }
+
+    /* HEADER */
+    .header {
+        background: #131921;
+        color: white;
+        padding: 15px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .header a {
+        color: white;
+        text-decoration: none;
+        margin-left: 20px;
+        font-size: 18px;
+    }
+    .logo a {
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    /* MAIN CONTAINER */
+    .track-container {
+        width: 80%;
+        margin: 30px auto;
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 0 8px #ccc;
+    }
+
+    .section-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .order-info {
+        background: #fafafa;
+        padding: 15px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        margin-bottom: 25px;
+    }
+
+    .order-info p {
+        font-size: 18px;
+        margin: 8px 0;
+    }
+
+    /* PRODUCT BOX */
+    .product-box {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 6px;
+        background: #fdfdfd;
+        margin-bottom: 30px;
+    }
+
+    .product-box img {
+        width: 120px;
+        border-radius: 6px;
+    }
+
+    .product-box h3 {
+        margin: 0;
+        font-size: 20px;
+    }
+
+    /* TRACKING BAR */
+    .timeline {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+        position: relative;
+    }
+
+    .timeline::before {
+        content: "";
+        position: absolute;
+        top: 20px;
+        left: 0;
+        height: 4px;
+        width: 100%;
+        background: #ddd;
+        z-index: 1;
+    }
+
+    .step {
+        text-align: center;
+        width: 25%;
+        z-index: 2;
+        position: relative;
+    }
+
+    .circle {
+        height: 25px;
+        width: 25px;
+        background: #ddd;
+        border-radius: 50%;
+        margin: 0 auto;
+        margin-bottom: 10px;
+        border: 3px solid #aaa;
+    }
+
+    .active .circle {
+        background: #34a853;
+        border-color: #34a853;
+    }
+
+    .step p {
+        font-size: 16px;
+    }
+
+    /* FOOTER */
+    .footer {
+        margin-top: 40px;
+        background: #131921;
+        padding: 15px;
+        text-align: center;
+        color: white;
+    }
+      
+</style>
+
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="logo"><a href="{{ url_for('home') }}">ElectroMart</a></div>
+    <div>
+        <a href="{{ url_for('order') }}">My Orders</a>
+    </div>
+</div>
+
+<!-- TRACK ORDER CONTENT -->
+<div class="track-container">
+
+    <h2 class="section-title">Track Your Order</h2>
+
+    <!-- ORDER DETAILS -->
+    <div class="order-info">
+        <p><strong>Order ID:</strong> EMX45293671</p>
+        <p><strong>Placed On:</strong> 26 November 2025</p>
+        <p><strong>Expected Delivery:</strong> 30 November 2025</p>
+    </div>
+
+    <!-- PRODUCT DETAILS -->
+    <div class="product-box">
+        <img src="https://m.media-amazon.com/images/I/71TPda7cwUL._SL1500_.jpg">
+        <div>
+            <h3>Apple iPhone 13 (128 GB)</h3>
+            <p>Color: Midnight Blue</p>
+            <p>Price: ₹ 54,999</p>
+        </div>
+    </div>
+
+    <!-- ORDER TRACKING TIMELINE -->
+    <div class="timeline">
+
+        <div class="step active">
+            <div class="circle"></div>
+            <p>Order Placed</p>
+        </div>
+
+        <div class="step active">
+            <div class="circle"></div>
+            <p>Packed</p>
+        </div>
+
+        <div class="step active">
+            <div class="circle"></div>
+            <p>Shipped</p>
+        </div>
+
+        <div class="step">
+            <div class="circle"></div>
+            <p>Out For Delivery</p>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    © 2025 ElectroMart | Fast & Secure Delivery | All Rights Reserved
+</div>
+ <!-- Accessibility Toolbar -->
+<div id="accessibility-toolbar">
+  <button onclick="readPage()" title="Read Page">🔊 Read</button>
+  <button onclick="stopSpeak()" title="Stop Speaking">🛑 Stop</button>
+  <button onclick="changeFontSize('increase')" title="Increase Font Size">A+</button>
+  <button onclick="changeFontSize('decrease')" title="Decrease Font Size">A-</button>
+  <button onclick="toggleHighContrast()" title="Toggle High Contrast">🌗 Contrast</button>
+  <button onclick="startVoiceCommands()" title="Start Voice Commands">🎤 Voice</button>
+  <button onclick="showSignLanguageHelp()" title="Show Sign Language Help">🤟 Sign</button>
+</div>
+
+<script>
+    const FLASK_URLS = {
+        home: "{{ url_for('home') }}",
+        signup: "{{ url_for('signup') }}",
+        admin: "{{ url_for('admin') }}",
+        cart: "{{ url_for('cart') }}",
+        checkout: "{{ url_for('checkout') }}",
+        order: "{{ url_for('order') }}",
+        track: "{{ url_for('track') }}",
+        product: "{{ url_for('product') }}",
+        mobile: "{{ url_for('mobile') }}",
+        laptop: "{{ url_for('laptop') }}",
+        watch: "{{ url_for('watch') }}",
+        earbuds: "{{ url_for('earbuds') }}",
+        speaker: "{{ url_for('speaker') }}"
+    };
+</script>
+
+<script src="{{ url_for('static', filename='accessease.js') }}"></script>
+</body>
+</html>

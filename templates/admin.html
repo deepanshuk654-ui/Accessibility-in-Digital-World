@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroMart Admin Dashboard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='accessease.css') }}">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f4f4f4;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background: rgb(75, 75, 75);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 15px;
+            color: white;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            border-bottom: 1px solid #222;
+        }
+
+        .sidebar a:hover {
+            background: #444;
+        }
+
+        /* Main content */
+        .main {
+            margin-left: 230px;
+            padding: 20px;
+        }
+        
+
+        .box-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .box {
+            background: white;
+            width: 250px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .box h3 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .box p {
+            margin-top: 10px;
+            font-size: 14px;
+            color: gray;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            background: white;
+            margin-top: 20px;
+            border-collapse: collapse;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ccc;
+            text-align: left;
+        }
+
+        th {
+            background: #2874f0;
+            color: white;
+        }
+
+        /* Buttons */
+        .btn {
+            background: #2874f0;
+            color: white;
+            padding: 8px 14px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .btn:hover {
+            background: #0d5bd7;
+        }
+
+        /* Add product form */
+        .form-box {
+            background: white;
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 8px;
+        }
+
+        .form-box input, .form-box textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 7px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+     
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>⚙ Admin Panel</h2>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#addproduct">Add Product</a>
+        <a href="#products">Manage Products</a>
+        <a href="#orders">Orders</a>
+        <a href="#users">Users</a>
+        <a href="{{ url_for('home') }}">← Back to Home</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <h1  id="dashboard">📊 Dashboard Overview</h1>
+
+        <div class="box-container">
+            <div class="box">
+                <h3>120</h3>
+                <p>Total Products</p>
+            </div>
+
+            <div class="box">
+                <h3>85</h3>
+                <p>Total Orders</p>
+            </div>
+
+            <div class="box">
+                <h3>42</h3>
+                <p>Registered Users</p>
+            </div>
+
+            <div class="box">
+                <h3>₹1,45,000</h3>
+                <p>Total Revenue</p>
+            </div>
+        </div>
+
+        <!-- Add Product -->
+        <h2 id="addproduct">➕ Add Product</h2>
+        <div class="form-box">
+            <form>
+                <input type="text" placeholder="Product Name" required>
+                <input type="text" placeholder="Product Price" required>
+                <input type="text" placeholder="Product Image URL" required>
+                <textarea rows="4" placeholder="Product Description"></textarea>
+                <button class="btn">Add Product</button>
+            </form>
+        </div>
+
+        <!-- Manage Products -->
+        <h2 id="products">📦 Manage Products</h2>
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+
+            <tr>
+                <td>iPhone 13</td>
+                <td>₹55,999</td>
+                <td><button class="btn">Delete</button></td>
+            </tr>
+
+            <tr>
+                <td>HP Laptop</td>
+                <td>₹43,999</td>
+                <td><button class="btn">Delete</button></td>
+            </tr>
+
+            <tr>
+                <td>Boat Earbuds</td>
+                <td>₹999</td>
+                <td><button class="btn">Delete</button></td>
+            </tr>
+        </table>
+
+        <!-- Orders List -->
+        <h2 id="orders">🛒 Orders List</h2>
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Product</th>
+                <th>Status</th>
+            </tr>
+
+            <tr>
+                <td>#1001</td>
+                <td>iPhone 13</td>
+                <td>Shipped</td>
+            </tr>
+
+            <tr>
+                <td>#1002</td>
+                <td>Boat Earbuds</td>
+                <td>Delivered</td>
+            </tr>
+        </table>
+
+        <!-- Users -->
+        <h2 id="users">👥 Users List</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+            </tr>
+
+            <tr>
+                <td>Rohit Kumar</td>
+                <td>rohit@gmail.com</td>
+            </tr>
+
+            <tr>
+                <td>Priya Sharma</td>
+                <td>priya@gmail.com</td>
+            </tr>
+        </table>
+        
+    </div>
+  <!-- Accessibility Toolbar -->
+<div id="accessibility-toolbar">
+  <button onclick="readPage()" title="Read Page">🔊 Read</button>
+  <button onclick="stopSpeak()" title="Stop Speaking">🛑 Stop</button>
+  <button onclick="changeFontSize('increase')" title="Increase Font Size">A+</button>
+  <button onclick="changeFontSize('decrease')" title="Decrease Font Size">A-</button>
+  <button onclick="toggleHighContrast()" title="Toggle High Contrast">🌗 Contrast</button>
+  <button onclick="startVoiceCommands()" title="Start Voice Commands">🎤 Voice</button>
+  <button onclick="showSignLanguageHelp()" title="Show Sign Language Help">🤟 Sign</button>
+</div>
+
+<script>
+    const FLASK_URLS = {
+        home: "{{ url_for('home') }}",
+        signup: "{{ url_for('signup') }}",
+        admin: "{{ url_for('admin') }}",
+        cart: "{{ url_for('cart') }}",
+        checkout: "{{ url_for('checkout') }}",
+        order: "{{ url_for('order') }}",
+        track: "{{ url_for('track') }}",
+        product: "{{ url_for('product') }}",
+        mobile: "{{ url_for('mobile') }}",
+        laptop: "{{ url_for('laptop') }}",
+        watch: "{{ url_for('watch') }}",
+        earbuds: "{{ url_for('earbuds') }}",
+        speaker: "{{ url_for('speaker') }}"
+    };
+</script>
+
+<script src="{{ url_for('static', filename='accessease.js') }}"></script>
+</body>
+
+</html>
