@@ -170,13 +170,5 @@ document.addEventListener("keydown", function (e) {
     if (e.altKey && e.key === "g") showSignLanguageHelp();
     if (e.altKey && e.key === "b") vibrate();
 });
-// ================================
-// 7. VIBRATION FEEDBACK (MOBILE USERS)
-// ================================
-function vibrate() {
-    if ("vibrate" in navigator) {
-        navigator.vibrate(100);
-    }
-}
 
 
