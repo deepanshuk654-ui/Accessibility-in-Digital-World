@@ -1,0 +1,59 @@
+{# Reusable product card partial — variable: p #}
+{% set disc = ((p.original_price - p.price) / p.original_price * 100) | int if p.original_price and p.original_price > p.price else 0 %}
+<article class="product-card h-100" aria-label="{{ p.name }}">
+  <div class="img-wrap">
+    {% if disc > 0 %}
+    <span class="badge-discount">{{ disc }}% OFF</span>
+    {% endif %}
+    <button class="wishlist-toggle wishlist-btn {% if is_logged_in %}{% endif %}"
+            data-pid="{{ p.id }}"
+            aria-label="Add {{ p.name }} to wishlist"
+            title="Wishlist">
+      <i class="far fa-heart"></i>
+    </button>
+    <a href="{{ url_for('product_detail', pid=p.id) }}" tabindex="-1" aria-hidden="true">
+      <img src="{{ p.image_url or 'https://placehold.co/400x320?text=No+Image' }}"
+           alt="{{ p.name }}"
+           loading="lazy"
+           onerror="this.onerror=null;this.src='https://placehold.co/400x320?text={{ p.name | urlencode }}'">
+    </a>
+  </div>
+  <div class="card-body">
+    {% if p.brand %}
+    <div class="brand-tag">{{ p.brand }}</div>
+    {% endif %}
+    <a href="{{ url_for('product_detail', pid=p.id) }}" class="text-decoration-none">
+      <h3 class="product-name">{{ p.name }}</h3>
+    </a>
+    <div class="rating-row">
+      <span class="stars" aria-label="{{ p.rating }} stars out of 5">
+        {% for i in range(1, 6) %}
+          {% if i <= p.rating | int %}<i class="fas fa-star"></i>
+          {% elif i <= p.rating + 0.5 %}<i class="fas fa-star-half-alt"></i>
+          {% else %}<i class="far fa-star"></i>{% endif %}
+        {% endfor %}
+      </span>
+      <span class="rating-count">({{ p.review_count }})</span>
+    </div>
+    <div class="price-row">
+      <span class="price-current">₹{{ "{:,.0f}".format(p.price) }}</span>
+      {% if p.original_price and p.original_price > p.price %}
+      <span class="price-original">₹{{ "{:,.0f}".format(p.original_price) }}</span>
+      <span class="price-discount">{{ disc }}% off</span>
+      {% endif %}
+    </div>
+    {% if p.stock > 0 %}
+    <form method="POST" action="{{ url_for('cart_add') }}">
+      <input type="hidden" name="product_id" value="{{ p.id }}">
+      <input type="hidden" name="quantity" value="1">
+      <button type="submit" class="btn-add-cart" aria-label="Add {{ p.name }} to cart">
+        <i class="fas fa-cart-plus"></i> Add to Cart
+      </button>
+    </form>
+    {% else %}
+    <button class="btn-add-cart" disabled style="opacity:0.5;cursor:not-allowed;" aria-label="Out of stock">
+      <i class="fas fa-times-circle"></i> Out of Stock
+    </button>
+    {% endif %}
+  </div>
+</article>

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}My Wishlist{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container-xl">
+    <h1><i class="far fa-heart me-2"></i>My Wishlist</h1>
+  </div>
+</div>
+
+<div class="container-xl px-3 px-md-4 pb-5">
+  {% if not items %}
+  <div class="empty-state">
+    <i class="far fa-heart"></i>
+    <h4>Your wishlist is empty</h4>
+    <p>Save products you love to buy them later.</p>
+    <a href="{{ url_for('products') }}" class="btn btn-primary mt-2"><i class="fas fa-shopping-bag me-2"></i>Explore Products</a>
+  </div>
+  {% else %}
+  <p class="text-muted mb-4">{{ items|length }} saved item{{ 's' if items|length != 1 }}</p>
+  <div class="row g-3" role="list">
+    {% for p in items %}
+    <div class="col-xl-3 col-lg-4 col-sm-6" role="listitem">{% include '_product_card.html' %}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

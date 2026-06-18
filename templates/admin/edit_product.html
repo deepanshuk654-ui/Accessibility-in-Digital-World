@@ -1,0 +1,91 @@
+{% extends "admin/base.html" %}
+{% block title %}Edit Product{% endblock %}
+{% block page_title %}Edit Product #{{ product.id }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-xl-8">
+    <div class="card-ae">
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <span><i class="fas fa-edit me-2 text-primary"></i>Edit: {{ product.name[:60] }}</span>
+        <a href="{{ url_for('admin_products') }}" class="btn btn-sm btn-outline-secondary">Back to List</a>
+      </div>
+      <div class="p-4">
+        <form method="POST" novalidate>
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Product Name *</label>
+              <input type="text" name="name" class="form-control" required value="{{ product.name }}">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Brand</label>
+              <input type="text" name="brand" class="form-control" value="{{ product.brand or '' }}">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Category</label>
+              <select name="category_id" class="form-select">
+                <option value="">Select Category</option>
+                {% for cat in cats %}
+                <option value="{{ cat.id }}" {% if cat.id == product.category_id %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Selling Price (₹) *</label>
+              <input type="number" name="price" class="form-control" required min="0" step="0.01" value="{{ product.price }}">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Original / MRP (₹)</label>
+              <input type="number" name="original_price" class="form-control" min="0" step="0.01" value="{{ product.original_price or '' }}">
+            </div>
+            <div class="col-sm-4">
+              <label class="form-label">Stock</label>
+              <input type="number" name="stock" class="form-control" min="0" value="{{ product.stock }}">
+            </div>
+            <div class="col-sm-4">
+              <label class="form-label">Featured?</label>
+              <select name="is_featured" class="form-select">
+                <option value="0" {% if not product.is_featured %}selected{% endif %}>No</option>
+                <option value="1" {% if product.is_featured %}selected{% endif %}>Yes</option>
+              </select>
+            </div>
+            <div class="col-sm-4">
+              <label class="form-label">Status</label>
+              <select name="is_active" class="form-select">
+                <option value="1" {% if product.is_active %}selected{% endif %}>Active</option>
+                <option value="0" {% if not product.is_active %}selected{% endif %}>Inactive</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Main Image URL</label>
+              <input type="url" name="image_url" class="form-control" value="{{ product.image_url or '' }}">
+              {% if product.image_url %}
+              <img src="{{ product.image_url }}" alt="Preview" style="height:60px;object-fit:contain;margin-top:8px;border-radius:6px;border:1px solid var(--border);">
+              {% endif %}
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Image 2 URL</label>
+              <input type="url" name="image2_url" class="form-control" value="{{ product.image2_url or '' }}">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Image 3 URL</label>
+              <input type="url" name="image3_url" class="form-control" value="{{ product.image3_url or '' }}">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Description</label>
+              <textarea name="description" class="form-control" rows="4">{{ product.description or '' }}</textarea>
+            </div>
+          </div>
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary px-4"><i class="fas fa-save me-2"></i>Save Changes</button>
+            <a href="{{ url_for('admin_products') }}" class="btn btn-outline-secondary px-4">Cancel</a>
+            <form method="POST" action="{{ url_for('admin_delete_product', pid=product.id) }}" class="ms-auto" onsubmit="return confirm('Deactivate this product?')">
+              <button type="submit" class="btn btn-outline-danger px-3"><i class="fas fa-eye-slash me-1"></i>Deactivate</button>
+            </form>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

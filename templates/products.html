@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}{{ active_cat.name if active_cat else 'All Products' }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container-xl">
+    <h1>
+      {% if active_cat %}<i class="fas {{ active_cat.icon or 'fa-tag' }} me-2"></i>{{ active_cat.name }}
+      {% else %}<i class="fas fa-th-large me-2"></i>All Products{% endif %}
+    </h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+        {% if active_cat %}<li class="breadcrumb-item active">{{ active_cat.name }}</li>
+        {% else %}<li class="breadcrumb-item active">Products</li>{% endif %}
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container-xl px-3 px-md-4 pb-5">
+  <div class="row g-4">
+
+    <!-- Sidebar Filters -->
+    <div class="col-lg-3 d-none d-lg-block">
+      <form method="GET" action="{{ url_for('products') }}" id="filter-form">
+        <input type="hidden" name="category" value="{{ category_slug }}">
+        <div class="filter-panel">
+          <h6>Filters</h6>
+
+          <!-- Sort -->
+          <div class="filter-group">
+            <div style="font-size:0.8rem;font-weight:700;color:var(--text-muted);margin-bottom:8px;">SORT BY</div>
+            <select name="sort" class="form-select form-select-sm" onchange="this.form.submit()">
+              <option value="popular"    {% if sort=='popular'    %}selected{% endif %}>Most Popular</option>
+              <option value="rating"     {% if sort=='rating'     %}selected{% endif %}>Top Rated</option>
+              <option value="newest"     {% if sort=='newest'     %}selected{% endif %}>Newest First</option>
+              <option value="price_asc"  {% if sort=='price_asc'  %}selected{% endif %}>Price: Low to High</option>
+              <option value="price_desc" {% if sort=='price_desc' %}selected{% endif %}>Price: High to Low</option>
+            </select>
+          </div>
+
+          <!-- Price range -->
+          <div class="filter-group">
+            <div style="font-size:0.8rem;font-weight:700;color:var(--text-muted);margin-bottom:8px;">PRICE RANGE</div>
+            <input type="range" id="price-range-slider" class="form-range"
+                   min="0" max="200000" step="500"
+                   value="{{ max_price if max_price < 200000 else 200000 }}">
+            <div class="d-flex justify-content-between mt-1" style="font-size:0.78rem;color:var(--text-muted);">
+              <span>₹0</span>
+              <span id="price-range-display">₹0 – ₹{{ "{:,.0f}".format(max_price) }}</span>
+            </div>
+            <input type="hidden" name="max_price" id="max-price-input" value="{{ max_price }}">
+          </div>
+
+          <!-- Brands -->
+          {% if brands %}
+          <div class="filter-group">
+            <div style="font-size:0.8rem;font-weight:700;color:var(--text-muted);margin-bottom:8px;">BRAND</div>
+            {% for b in brands %}
+            <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;padding:3px 0;cursor:pointer;">
+              <input type="radio" name="brand" value="{{ b.brand }}"
+                     {% if brand_filter == b.brand %}checked{% endif %}
+                     onchange="this.form.submit()">
+              <span>{{ b.brand }}</span>
+            </label>
+            {% endfor %}
+            {% if brand_filter %}
+            <a href="{{ url_for('products', category=category_slug, sort=sort) }}" class="btn btn-sm btn-outline-secondary w-100 mt-2">Clear Brand</a>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          <button type="submit" class="btn btn-primary w-100 btn-sm">Apply Filters</button>
+          <a href="{{ url_for('products', category=category_slug) }}" class="btn btn-outline-secondary w-100 btn-sm mt-2">Reset</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="col-lg-9">
+      <!-- Top bar -->
+      <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+        <div style="font-size:0.88rem;color:var(--text-muted);">
+          Showing <strong>{{ products|length }}</strong> of <strong>{{ total }}</strong> products
+          {% if brand_filter %} · Brand: <strong>{{ brand_filter }}</strong>{% endif %}
+        </div>
+        <!-- Mobile sort -->
+        <form method="GET" class="d-lg-none">
+          <input type="hidden" name="category" value="{{ category_slug }}">
+          <select name="sort" class="form-select form-select-sm" onchange="this.form.submit()" style="width:auto;">
+            <option value="popular"    {% if sort=='popular'    %}selected{% endif %}>Popular</option>
+            <option value="price_asc"  {% if sort=='price_asc'  %}selected{% endif %}>Price ↑</option>
+            <option value="price_desc" {% if sort=='price_desc' %}selected{% endif %}>Price ↓</option>
+            <option value="rating"     {% if sort=='rating'     %}selected{% endif %}>Top Rated</option>
+          </select>
+        </form>
+      </div>
+
+      {% if products %}
+      <div class="row g-3" role="list" aria-label="Product list">
+        {% for p in products %}
+        <div class="col-xl-4 col-sm-6" role="listitem">
+          {% include '_product_card.html' %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Pagination -->
+      {% if total_pages > 1 %}
+      <nav aria-label="Product pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item {% if page == 1 %}disabled{% endif %}">
+            <a class="page-link" href="{{ url_for('products', category=category_slug, sort=sort, brand=brand_filter, page=page-1, max_price=max_price) }}">Previous</a>
+          </li>
+          {% for p in range(1, total_pages+1) %}
+          <li class="page-item {% if p == page %}active{% endif %}">
+            <a class="page-link" href="{{ url_for('products', category=category_slug, sort=sort, brand=brand_filter, page=p, max_price=max_price) }}">{{ p }}</a>
+          </li>
+          {% endfor %}
+          <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+            <a class="page-link" href="{{ url_for('products', category=category_slug, sort=sort, brand=brand_filter, page=page+1, max_price=max_price) }}">Next</a>
+          </li>
+        </ul>
+      </nav>
+      {% endif %}
+
+      {% else %}
+      <div class="empty-state">
+        <i class="fas fa-search"></i>
+        <h4>No products found</h4>
+        <p>Try adjusting filters or <a href="{{ url_for('products') }}">browse all products</a></p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

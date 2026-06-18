@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Dashboard{% endblock %} — AccessEase Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body { background: #f1f5f9; font-family: 'Inter', sans-serif; margin: 0; }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- Flash toasts -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for cat, msg in messages %}
+  <div class="server-flash d-none" data-msg="{{ msg }}" data-type="{{ cat }}"></div>
+  {% endfor %}
+{% endwith %}
+
+<!-- Sidebar -->
+<aside class="admin-sidebar" id="adminSidebar" aria-label="Admin navigation">
+  <div class="admin-sidebar-logo">
+    <h4><i class="fas fa-universal-access me-2" style="color:#ff9900"></i>Access<span>Ease</span></h4>
+    <p style="color:rgba(255,255,255,0.4);font-size:0.72rem;margin:4px 0 0;">Admin Dashboard</p>
+  </div>
+
+  <nav class="admin-nav" role="navigation">
+    <div class="nav-section">Main</div>
+    <a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+      <i class="fas fa-tachometer-alt"></i> Dashboard
+    </a>
+
+    <div class="nav-section mt-2">Catalog</div>
+    <a href="{{ url_for('admin_products') }}" class="{% if 'admin_product' in request.endpoint %}active{% endif %}">
+      <i class="fas fa-box"></i> Products
+    </a>
+    <a href="{{ url_for('admin_add_product') }}" class="{% if request.endpoint == 'admin_add_product' %}active{% endif %}">
+      <i class="fas fa-plus-circle"></i> Add Product
+    </a>
+
+    <div class="nav-section mt-2">Commerce</div>
+    <a href="{{ url_for('admin_orders') }}" class="{% if 'admin_order' in request.endpoint %}active{% endif %}">
+      <i class="fas fa-shopping-bag"></i> Orders
+    </a>
+    <a href="{{ url_for('admin_users') }}" class="{% if 'admin_user' in request.endpoint %}active{% endif %}">
+      <i class="fas fa-users"></i> Users
+    </a>
+
+    <div class="nav-section mt-2">System</div>
+    <a href="{{ url_for('home') }}" target="_blank">
+      <i class="fas fa-external-link-alt"></i> View Store
+    </a>
+    <a href="{{ url_for('admin_logout') }}" style="color:rgba(255,100,100,0.8);">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </nav>
+</aside>
+
+<!-- Content -->
+<div class="admin-content">
+  <!-- Topbar -->
+  <div class="admin-topbar">
+    <div class="d-flex align-items-center gap-3">
+      <button id="admin-sidebar-toggle" class="btn btn-sm btn-outline-secondary d-lg-none" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+      </button>
+      <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <span style="font-size:0.85rem;color:var(--text-muted);">
+        <i class="fas fa-user-shield me-1"></i>{{ session.get('admin_name','Admin') }}
+      </span>
+      <a href="{{ url_for('admin_logout') }}" class="btn btn-sm btn-outline-danger">
+        <i class="fas fa-sign-out-alt me-1"></i>Logout
+      </a>
+    </div>
+  </div>
+
+  {% block content %}{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Track Order #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container-xl">
+    <h1><i class="fas fa-map-marker-alt me-2"></i>Track Order #{{ order.id }}</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('orders') }}">My Orders</a></li>
+        <li class="breadcrumb-item active">Track #{{ order.id }}</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container-xl px-3 px-md-4 pb-5">
+  <div class="row g-4 justify-content-center">
+    <div class="col-lg-7">
+
+      <!-- Status Card -->
+      <div class="card-ae mb-4">
+        <div class="p-5 text-center">
+          {% set icons = {'pending':'fa-clock','processing':'fa-cogs','shipped':'fa-truck','delivered':'fa-check-circle','cancelled':'fa-times-circle'} %}
+          {% set colors = {'pending':'var(--warning)','processing':'var(--info)','shipped':'var(--primary)','delivered':'var(--success)','cancelled':'var(--danger)'} %}
+          <div style="width:80px;height:80px;border-radius:50%;background:rgba(26,86,219,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:2rem;color:{{ colors.get(order.status,'var(--primary)') }};">
+            <i class="fas {{ icons.get(order.status,'fa-box') }}"></i>
+          </div>
+          <h3 class="fw-bold mb-1" style="text-transform:capitalize;">{{ order.status }}</h3>
+          <p style="color:var(--text-muted);font-size:0.9rem;">
+            {% if order.status == 'pending' %}Your order has been placed and is awaiting confirmation.
+            {% elif order.status == 'processing' %}We are preparing your order for shipment.
+            {% elif order.status == 'shipped' %}Your order is on its way! Expected delivery in 2–3 days.
+            {% elif order.status == 'delivered' %}Your order has been delivered. Enjoy your purchase!
+            {% elif order.status == 'cancelled' %}This order has been cancelled.
+            {% endif %}
+          </p>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="card-ae mb-4">
+        <div class="card-header"><i class="fas fa-history me-2 text-primary"></i>Order Timeline</div>
+        <div class="p-4">
+          <div class="tracking-timeline">
+            {% set step_info = [
+              ('pending','Order Placed','Your order has been received and confirmed.','fa-shopping-bag'),
+              ('processing','Processing','Our team is picking and packing your items.','fa-cogs'),
+              ('shipped','Shipped','Your order is on the way with our courier partner.','fa-truck'),
+              ('delivered','Delivered','Package delivered to your address successfully.','fa-check-circle'),
+            ] %}
+            {% for key, title, desc, icon in step_info %}
+            {% set is_done = steps.index(key) < current_step %}
+            {% set is_active = steps.index(key) == current_step %}
+            <div class="tracking-step {% if is_done %}done{% elif is_active %}active{% endif %}">
+              <div class="step-dot">
+                {% if is_done %}<i class="fas fa-check" style="font-size:0.6rem;"></i>
+                {% else %}<i class="fas {{ icon }}" style="font-size:0.6rem;"></i>{% endif %}
+              </div>
+              <h6 style="color:{% if is_done or is_active %}var(--text-primary){% else %}var(--text-muted){% endif %};">
+                {{ title }}
+                {% if is_active %}<span class="badge bg-primary ms-2" style="font-size:0.65rem;">Current</span>{% endif %}
+              </h6>
+              <p>{{ desc }}</p>
+              {% if is_done or is_active %}
+              <div style="font-size:0.72rem;color:var(--text-muted);">
+                {{ order.updated_at.strftime('%d %b %Y') if order.updated_at else '' }}
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Info -->
+      <div class="card-ae">
+        <div class="card-header"><i class="fas fa-info-circle me-2 text-primary"></i>Order Details</div>
+        <div class="p-4">
+          <div class="row g-3" style="font-size:0.88rem;">
+            <div class="col-sm-6"><span style="color:var(--text-muted);">Order ID:</span> <strong>#{{ order.id }}</strong></div>
+            <div class="col-sm-6"><span style="color:var(--text-muted);">Amount:</span> <strong>₹{{ "{:,.0f}".format(order.total_amount) }}</strong></div>
+            <div class="col-sm-6"><span style="color:var(--text-muted);">Payment:</span> <strong>{{ order.payment_method }}</strong></div>
+            <div class="col-sm-6"><span style="color:var(--text-muted);">Placed:</span> <strong>{{ order.created_at.strftime('%d %b %Y') if order.created_at else '' }}</strong></div>
+            <div class="col-12"><span style="color:var(--text-muted);">Shipping to:</span> <strong>{{ order.shipping_name }}, {{ order.shipping_city }}, {{ order.shipping_state }}</strong></div>
+          </div>
+          <div class="d-flex gap-2 mt-3">
+            <a href="{{ url_for('order_detail', order_id=order.id) }}" class="btn btn-outline-primary btn-sm">View Details</a>
+            <a href="{{ url_for('orders') }}" class="btn btn-outline-secondary btn-sm">All Orders</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

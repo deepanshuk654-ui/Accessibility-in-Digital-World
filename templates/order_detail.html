@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container-xl">
+    <h1><i class="fas fa-receipt me-2"></i>Order #{{ order.id }}</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('orders') }}">My Orders</a></li>
+        <li class="breadcrumb-item active">Order #{{ order.id }}</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container-xl px-3 px-md-4 pb-5">
+  <div class="row g-4">
+    <!-- Items -->
+    <div class="col-lg-8">
+      <div class="card-ae mb-4">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <span><i class="fas fa-box me-2 text-primary"></i>Order Items</span>
+          <span class="badge-status badge-{{ order.status }}">{{ order.status }}</span>
+        </div>
+        <div class="p-4">
+          {% for item in items %}
+          <div class="d-flex align-items-center gap-3 {% if not loop.last %}border-bottom pb-3 mb-3{% endif %}" style="border-color:var(--border)!important;">
+            <img src="{{ item.product_img or item.image_url or 'https://via.placeholder.com/70' }}"
+                 alt="{{ item.name }}"
+                 style="width:70px;height:70px;object-fit:contain;border-radius:8px;background:#f8fafc;border:1px solid var(--border);padding:6px;flex-shrink:0;">
+            <div class="flex-1">
+              <div class="fw-bold" style="font-size:0.92rem;">{{ item.name }}</div>
+              <div style="font-size:0.82rem;color:var(--text-muted);">Qty: {{ item.quantity }}</div>
+            </div>
+            <div class="text-end">
+              <div class="fw-bold">₹{{ "{:,.0f}".format(item.price) }}</div>
+              <div style="font-size:0.78rem;color:var(--text-muted);">Total: ₹{{ "{:,.0f}".format(item.price * item.quantity) }}</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Shipping address -->
+      <div class="card-ae">
+        <div class="card-header"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Shipping Address</div>
+        <div class="p-4">
+          <div class="fw-bold">{{ order.shipping_name }}</div>
+          <div style="color:var(--text-secondary);font-size:0.9rem;line-height:1.8;">
+            {{ order.shipping_address }}<br>
+            {{ order.shipping_city }}, {{ order.shipping_state }} – {{ order.shipping_pincode }}<br>
+            <i class="fas fa-phone me-1"></i>{{ order.shipping_phone }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary sidebar -->
+    <div class="col-lg-4">
+      <div class="order-summary mb-4">
+        <h5>Payment Summary</h5>
+        {% set subtotal = items|sum(attribute='price') %}
+        <div class="summary-row"><span>Subtotal</span><span>₹{{ "{:,.0f}".format(order.total_amount - (49 if order.total_amount > 500 else 0)) }}</span></div>
+        <div class="summary-row"><span>Shipping</span><span class="text-success fw-bold">FREE</span></div>
+        <div class="summary-row"><span>Payment Method</span><span>{{ order.payment_method }}</span></div>
+        <div class="summary-row total"><span>Total Paid</span><span>₹{{ "{:,.0f}".format(order.total_amount) }}</span></div>
+      </div>
+
+      <div class="card-ae p-4">
+        <h6 class="fw-bold mb-3">Order Timeline</h6>
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <i class="fas fa-clock" style="color:var(--primary);width:16px;"></i>
+          <div>
+            <div style="font-size:0.82rem;font-weight:600;">Order Placed</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">{{ order.created_at.strftime('%d %b %Y, %I:%M %p') if order.created_at else '' }}</div>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <i class="fas fa-sync" style="color:var(--primary);width:16px;"></i>
+          <div>
+            <div style="font-size:0.82rem;font-weight:600;">Last Updated</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">{{ order.updated_at.strftime('%d %b %Y, %I:%M %p') if order.updated_at else '' }}</div>
+          </div>
+        </div>
+
+        {% if order.status not in ['delivered','cancelled'] %}
+        <a href="{{ url_for('order_track', order_id=order.id) }}" class="btn btn-primary w-100 mt-3">
+          <i class="fas fa-map-marker-alt me-2"></i>Track Order
+        </a>
+        {% endif %}
+        <a href="{{ url_for('orders') }}" class="btn btn-outline-secondary w-100 mt-2">
+          <i class="fas fa-arrow-left me-2"></i>All Orders
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

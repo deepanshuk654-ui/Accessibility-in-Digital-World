@@ -1,0 +1,103 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+  {% set cards = [
+    ('fa-users','Total Users', stats.total_users, 'rgba(26,86,219,0.12)', 'var(--primary)'),
+    ('fa-box','Products', stats.total_products, 'rgba(5,150,105,0.12)', 'var(--success)'),
+    ('fa-shopping-bag','Total Orders', stats.total_orders, 'rgba(245,158,11,0.12)', 'var(--warning)'),
+    ('fa-rupee-sign','Revenue', '₹' + '{:,.0f}'.format(stats.total_revenue), 'rgba(14,165,233,0.12)', 'var(--info)'),
+    ('fa-clock','Pending Orders', stats.pending_orders, 'rgba(239,68,68,0.12)', 'var(--danger)'),
+  ] %}
+  {% for icon, label, val, bg, color in cards %}
+  <div class="col-xl col-md-4 col-sm-6">
+    <div class="stat-card">
+      <div class="icon-wrap" style="background:{{ bg }};">
+        <i class="fas {{ icon }}" style="color:{{ color }};"></i>
+      </div>
+      <div>
+        <div class="stat-val">{{ val }}</div>
+        <div class="stat-lbl">{{ label }}</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="row g-4">
+  <!-- Recent Orders -->
+  <div class="col-lg-8">
+    <div class="admin-table">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;display:flex;align-items:center;justify-content:space-between;">
+        <span><i class="fas fa-shopping-bag me-2 text-primary"></i>Recent Orders</span>
+        <a href="{{ url_for('admin_orders') }}" class="btn btn-sm btn-outline-primary">View All</a>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>#ID</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in recent_orders %}
+          <tr>
+            <td>#{{ o.id }}</td>
+            <td>{{ o.user_name }}</td>
+            <td>₹{{ "{:,.0f}".format(o.total_amount) }}</td>
+            <td><span class="badge-status badge-{{ o.status }}">{{ o.status }}</span></td>
+            <td>{{ o.created_at.strftime('%d %b %Y') if o.created_at else '' }}</td>
+            <td><a href="{{ url_for('admin_order_detail', order_id=o.id) }}" class="btn btn-xs btn-outline-primary" style="padding:3px 8px;font-size:0.75rem;">View</a></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6" class="text-center text-muted py-4">No orders yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Right column -->
+  <div class="col-lg-4">
+    <!-- Category Sales -->
+    {% if cat_sales %}
+    <div class="admin-table mb-4">
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);font-weight:700;">
+        <i class="fas fa-chart-pie me-2 text-primary"></i>Sales by Category
+      </div>
+      <div class="p-3">
+        {% for cs in cat_sales %}
+        <div class="d-flex align-items-center justify-content-between py-2">
+          <span style="font-size:0.85rem;font-weight:500;">{{ cs.name }}</span>
+          <span style="background:rgba(26,86,219,0.1);color:var(--primary);padding:2px 10px;border-radius:50px;font-size:0.78rem;font-weight:700;">{{ cs.sold }} sold</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Low stock -->
+    {% if low_stock %}
+    <div class="admin-table">
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);font-weight:700;color:var(--danger);">
+        <i class="fas fa-exclamation-triangle me-2"></i>Low Stock Alert
+      </div>
+      <div class="p-3">
+        {% for p in low_stock %}
+        <div class="d-flex align-items-center justify-content-between py-2 {% if not loop.last %}border-bottom{% endif %}" style="border-color:var(--border)!important;">
+          <div>
+            <div style="font-size:0.82rem;font-weight:600;">{{ p.name[:40] }}{{ '…' if p.name|length > 40 }}</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);">{{ p.brand }}</div>
+          </div>
+          <span style="color:var(--danger);font-weight:700;font-size:0.88rem;">{{ p.stock }} left</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

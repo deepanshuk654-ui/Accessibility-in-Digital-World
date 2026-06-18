@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="" data-contrast="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AccessEase 2.0 — Accessibility-focused Electronics E-Commerce">
+  <title>{% block title %}AccessEase 2.0{% endblock %} | AccessEase</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome 6 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- AccessEase CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <!-- Legacy CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='accessease.css') }}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- ── HIDDEN FLASH MESSAGES for JS toast ── -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    <div class="server-flash d-none" data-msg="{{ message }}" data-type="{{ category }}"></div>
+  {% endfor %}
+{% endwith %}
+
+<!-- ════════════════════════════════════════════
+     NAVBAR
+     ════════════════════════════════════════════ -->
+<nav class="ae-navbar navbar navbar-expand-lg" role="navigation" aria-label="Main navigation">
+  <div class="container-xl">
+
+    <!-- Brand -->
+    <a class="navbar-brand" href="{{ url_for('home') }}" aria-label="AccessEase home">
+      <i class="fas fa-universal-access" style="color:var(--secondary);font-size:1.4rem;"></i>
+      Access<span class="brand-accent">Ease</span>
+    </a>
+
+    <!-- Search (center) -->
+    <div class="navbar-search mx-auto d-none d-md-block" role="search" aria-label="Product search">
+      <form action="{{ url_for('search') }}" method="GET" autocomplete="off">
+        <input type="search" id="main-search" name="q"
+               placeholder="Search products, brands…"
+               value="{{ request.args.get('q', '') }}"
+               aria-label="Search products"
+               autocomplete="off">
+        <button type="submit" class="btn-search" aria-label="Submit search">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+      <div id="search-suggestions" class="search-suggestions" role="listbox"></div>
+    </div>
+
+    <!-- Right actions -->
+    <div class="d-flex align-items-center gap-2 ms-auto">
+      {% if is_logged_in %}
+        <a href="{{ url_for('wishlist') }}" class="nav-link text-white d-none d-lg-flex align-items-center gap-1" title="Wishlist" aria-label="Wishlist">
+          <i class="far fa-heart"></i>
+        </a>
+        <a href="{{ url_for('cart') }}" class="nav-link text-white cart-badge" title="Cart" aria-label="Shopping cart, {{ cart_count }} items">
+          <i class="fas fa-shopping-cart"></i>
+          {% if cart_count > 0 %}<span class="badge">{{ cart_count }}</span>{% endif %}
+        </a>
+        <div class="dropdown">
+          <button class="btn btn-link nav-link text-white dropdown-toggle d-flex align-items-center gap-2 p-0"
+                  type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <div style="width:32px;height:32px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;color:#fff;">
+              {{ current_user[0].upper() if current_user else 'U' }}
+            </div>
+            <span class="d-none d-lg-inline" style="font-size:0.88rem;">{{ current_user }}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow">
+            <li><a class="dropdown-item" href="{{ url_for('profile') }}"><i class="fas fa-user me-2 text-primary"></i>My Profile</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('orders') }}"><i class="fas fa-box me-2 text-primary"></i>My Orders</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('wishlist') }}"><i class="far fa-heart me-2 text-danger"></i>Wishlist</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+          </ul>
+        </div>
+      {% else %}
+        <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm" aria-label="Login">
+          <i class="fas fa-sign-in-alt me-1"></i> Login
+        </a>
+        <a href="{{ url_for('signup') }}" class="btn btn-warning btn-sm d-none d-sm-flex" aria-label="Sign up">
+          Sign Up
+        </a>
+      {% endif %}
+
+      <!-- Navbar toggler -->
+      <button class="navbar-toggler border-0 text-white ms-1" type="button"
+              data-bs-toggle="collapse" data-bs-target="#navCollapse"
+              aria-controls="navCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- Collapsible links -->
+    <div class="collapse navbar-collapse" id="navCollapse">
+      <!-- Mobile search -->
+      <form action="{{ url_for('search') }}" method="GET" class="d-md-none mt-2 mb-2" role="search">
+        <div class="input-group">
+          <input type="search" class="form-control" name="q" placeholder="Search…" value="{{ request.args.get('q','') }}">
+          <button class="btn btn-warning" type="submit"><i class="fas fa-search"></i></button>
+        </div>
+      </form>
+      <ul class="navbar-nav ms-auto gap-1 d-lg-none">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}"><i class="fas fa-home me-1"></i>Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('products') }}"><i class="fas fa-th-large me-1"></i>All Products</a></li>
+        {% if is_logged_in %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('orders') }}"><i class="fas fa-box me-1"></i>My Orders</a></li>
+          <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-1"></i>Logout</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a></li>
+        {% endif %}
+      </ul>
+    </div>
+
+  </div>
+</nav>
+
+<!-- ── CATEGORY NAV ── -->
+<div class="cat-nav" role="navigation" aria-label="Product categories">
+  <div class="cat-nav-inner">
+    <a class="cat-item {% if request.path == '/' %}active{% endif %}" href="{{ url_for('home') }}" aria-label="All products">
+      <i class="fas fa-th-large"></i><span>All</span>
+    </a>
+    {% for cat in categories %}
+    <a class="cat-item {% if request.args.get('category') == cat.slug %}active{% endif %}"
+       href="{{ url_for('products', category=cat.slug) }}" aria-label="{{ cat.name }}">
+      <i class="fas {{ cat.icon or 'fa-tag' }}"></i>
+      <span>{{ cat.name }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     MAIN CONTENT
+     ════════════════════════════════════════════ -->
+<main id="main-content" role="main" tabindex="-1">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════ -->
+<footer class="ae-footer" role="contentinfo" aria-label="Site footer">
+  <div class="container-xl">
+    <div class="row g-4">
+
+      <!-- Brand column -->
+      <div class="col-lg-3 col-md-6">
+        <div class="footer-brand">
+          <h4><i class="fas fa-universal-access me-2" style="color:var(--secondary)"></i>Access<span>Ease</span></h4>
+          <p>Accessibility-focused electronics shopping — built for everyone, including users with disabilities.</p>
+          <div class="social-links">
+            <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories -->
+      <div class="col-lg-2 col-md-6">
+        <h6 class="footer-heading">Categories</h6>
+        <ul class="footer-links">
+          {% for cat in categories %}
+          <li><a href="{{ url_for('products', category=cat.slug) }}">{{ cat.name }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-lg-2 col-md-6">
+        <h6 class="footer-heading">Quick Links</h6>
+        <ul class="footer-links">
+          <li><a href="{{ url_for('home') }}">Home</a></li>
+          <li><a href="{{ url_for('products') }}">All Products</a></li>
+          {% if is_logged_in %}
+          <li><a href="{{ url_for('orders') }}">My Orders</a></li>
+          <li><a href="{{ url_for('profile') }}">My Profile</a></li>
+          {% else %}
+          <li><a href="{{ url_for('login') }}">Login</a></li>
+          <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <!-- Help -->
+      <div class="col-lg-2 col-md-6">
+        <h6 class="footer-heading">Help & Support</h6>
+        <ul class="footer-links">
+          <li><a href="#">Payment Methods</a></li>
+          <li><a href="#">Shipping Policy</a></li>
+          <li><a href="#">Return & Refunds</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div class="col-lg-3 col-md-6">
+        <h6 class="footer-heading">Contact Us</h6>
+        <ul class="footer-links">
+          <li><i class="fas fa-envelope me-2" style="color:var(--primary)"></i>support@accessease.com</li>
+          <li><i class="fas fa-phone me-2" style="color:var(--primary)"></i>1800-123-4567</li>
+          <li><i class="fas fa-clock me-2" style="color:var(--primary)"></i>Mon–Sat, 9am–6pm</li>
+        </ul>
+        <div class="mt-3" style="background:rgba(255,255,255,0.06);border-radius:8px;padding:12px;">
+          <div style="font-size:0.78rem;color:#64748b;margin-bottom:6px;">Accessibility Feature</div>
+          <div style="color:#e2e8f0;font-size:0.83rem;">♿ This site supports screen readers, keyboard nav, high contrast &amp; voice commands.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <div>© 2025 AccessEase 2.0 · All rights reserved</div>
+      <div style="font-size:0.78rem;color:#475569;">
+        Built with <i class="fas fa-heart text-danger"></i> for accessibility in the digital world
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════════════
+     ACCESSIBILITY TOOLBAR
+     ════════════════════════════════════════════ -->
+<div id="ae-toolbar" role="region" aria-label="Accessibility tools">
+  <div id="ae-toolbar-panel" role="dialog" aria-label="Accessibility options">
+    <h6>♿ Accessibility</h6>
+
+    <!-- Font size -->
+    <div style="margin-bottom:8px;">
+      <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:5px;font-weight:600;">Text Size</div>
+      <div class="ae-font-controls">
+        <button onclick="AE.setFont('decrease')" aria-label="Decrease text size">A–</button>
+        <button onclick="AE.setFont('reset')" aria-label="Reset text size">A</button>
+        <button onclick="AE.setFont('increase')" aria-label="Increase text size">A+</button>
+      </div>
+    </div>
+
+    <button class="ae-btn" id="btn-dark-mode" onclick="AE.toggleDark()" aria-pressed="false" aria-label="Toggle dark mode">
+      <i class="fas fa-moon"></i> Dark Mode
+    </button>
+    <button class="ae-btn" id="btn-contrast" onclick="AE.toggleContrast()" aria-pressed="false" aria-label="Toggle high contrast">
+      <i class="fas fa-adjust"></i> High Contrast
+    </button>
+    <button class="ae-btn" onclick="AE.speak()" aria-label="Read page aloud">
+      <i class="fas fa-volume-up"></i> Read Aloud
+    </button>
+    <button class="ae-btn" onclick="AE.stopSpeak()" aria-label="Stop reading">
+      <i class="fas fa-stop"></i> Stop Reading
+    </button>
+    <button class="ae-btn" onclick="AE.startVoice()" aria-label="Start voice commands">
+      <i class="fas fa-microphone"></i> Voice Commands
+    </button>
+    <button class="ae-btn" onclick="AE._showShortcutsHelp()" aria-label="Show keyboard shortcuts">
+      <i class="fas fa-keyboard"></i> Shortcuts (Alt+?)
+    </button>
+  </div>
+
+  <button id="ae-toolbar-toggle" aria-label="Toggle accessibility toolbar" aria-expanded="false" title="Accessibility Tools">
+    <i class="fas fa-universal-access"></i>
+  </button>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     CHATBOT BUBBLE
+     ════════════════════════════════════════════ -->
+<div id="chatbot-bubble" role="region" aria-label="Customer support chatbot">
+  <div id="chatbot-window" role="dialog" aria-modal="true" aria-label="Chat support">
+    <div id="chatbot-header">
+      <span><i class="fas fa-robot me-2"></i>AccessBot</span>
+      <button id="chatbot-close" style="background:transparent;border:none;color:#fff;cursor:pointer;font-size:1rem;" aria-label="Close chat">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div id="chatbot-messages" role="log" aria-live="polite" aria-label="Chat messages"></div>
+    <div id="chatbot-input">
+      <input id="chatbot-text" type="text" placeholder="Ask me anything…" aria-label="Type your message">
+      <button id="chatbot-send" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+  <button id="chatbot-btn" title="Chat with AccessBot" aria-label="Open chat support">
+    <i class="fas fa-robot"></i>
+  </button>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- AccessEase JS -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,102 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Signup - AccessEase</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='accessease.css') }}">
-</head>
-
-<body style="font-family: Arial; background:#f1f3f6; margin:0;">
-
-    <div style="background:#232f3e; padding:18px; color:white; font-size:26px; font-weight:bold;">
-        Signup
-    </div>
-
-    <div style="
-        width:380px; 
-        margin:40px auto; 
-        background:white; 
-        padding:35px; 
-        border-radius:10px; 
-        box-shadow:0 0 10px rgba(0,0,0,0.1);
-    ">
-
-        <h2 style="text-align:center; margin-bottom:20px;">Create Account</h2>
-
-        <!-- Flash Messages (Signup successful, Email exists, etc.) -->
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div
-            style="background:#d1ecf1; color:#0c5460; padding:10px; border-radius:5px; margin-bottom:15px; font-weight:bold;">
-            {% for msg in messages %}
-            {{ msg }}
-            {% endfor %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card-ae p-4">
+        <div class="text-center mb-4">
+          <div style="width:64px;height:64px;background:rgba(26,86,219,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+            <i class="fas fa-user-plus fa-xl" style="color:var(--primary)"></i>
+          </div>
+          <h1 class="h4 fw-bold mb-1">Create Account</h1>
+          <p class="text-muted small">Join AccessEase 2.0 today</p>
         </div>
-        {% endif %}
-        {% endwith %}
-
-        <form method="POST">
-
-            <label style="font-weight:bold;">Full Name</label><br>
-            <input type="text" name="name" required
-                style="width:100%; padding:10px; margin:7px 0; border:1px solid #ccc; border-radius:5px;"
-                placeholder="Enter your full name">
-
-            <label style="font-weight:bold;">Email</label><br>
-            <input type="email" name="email" required
-                style="width:100%; padding:10px; margin:7px 0; border:1px solid #ccc; border-radius:5px;"
-                placeholder="Enter your email">
-
-            <label style="font-weight:bold;">Password</label><br>
-            <input type="password" name="password" required
-                style="width:100%; padding:10px; margin:7px 0; border:1px solid #ccc; border-radius:5px;"
-                placeholder="Create a password">
-
-            <button type="submit"
-                style="width:100%; padding:12px; background:#2874f0; color:white; border:none; border-radius:5px; margin-top:15px; cursor:pointer; font-size:16px;">
-                Create Account
-            </button>
-
+        <form method="POST" novalidate>
+          <div class="mb-3">
+            <label for="name" class="form-label">Full Name</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-user text-muted"></i></span>
+              <input type="text" id="name" name="name" class="form-control"
+                     placeholder="Your full name" required autocomplete="name"
+                     value="{{ request.form.get('name','') }}">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email Address</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-envelope text-muted"></i></span>
+              <input type="email" id="email" name="email" class="form-control"
+                     placeholder="you@example.com" required autocomplete="email"
+                     value="{{ request.form.get('email','') }}">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-lock text-muted"></i></span>
+              <input type="password" id="password" name="password" class="form-control"
+                     placeholder="Min. 6 characters" required minlength="6">
+              <button type="button" class="input-group-text bg-transparent"
+                      onclick="togglePw('password')" style="cursor:pointer;border:1px solid #dee2e6;border-left:none;">
+                <i class="fas fa-eye text-muted" id="pw-eye-password"></i>
+              </button>
+            </div>
+            <div id="pw-strength" class="mt-1" style="font-size:0.75rem;"></div>
+          </div>
+          <div class="mb-4">
+            <label for="confirm_password" class="form-label">Confirm Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-lock text-muted"></i></span>
+              <input type="password" id="confirm_password" name="confirm_password" class="form-control"
+                     placeholder="Re-enter password" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 py-2 fw-bold mb-3">
+            <i class="fas fa-user-plus me-2"></i>Create Account
+          </button>
         </form>
-
-        <p style="text-align:center; margin-top:15px;">
-            Already have an account?
-            <a href="{{ url_for('login') }}" style="color:#2874f0; text-decoration:none;">Login</a>
+        <p class="text-center small mb-0">
+          Already have an account? <a href="{{ url_for('login') }}" class="fw-bold">Login here</a>
         </p>
+      </div>
     </div>
+  </div>
+</div>
+{% endblock %}
 
-    <!-- Accessibility Toolbar -->
-    <div id="accessibility-toolbar">
-        <button onclick="readPage()" title="Read Page">🔊 Read</button>
-        <button onclick="stopSpeak()" title="Stop Speaking">🛑 Stop</button>
-        <button onclick="changeFontSize('increase')" title="Increase Font Size">A+</button>
-        <button onclick="changeFontSize('decrease')" title="Decrease Font Size">A-</button>
-        <button onclick="toggleHighContrast()" title="Toggle High Contrast">🌗 Contrast</button>
-        <button onclick="startVoiceCommands()" title="Start Voice Commands">🎤 Voice</button>
-        <button onclick="showSignLanguageHelp()" title="Show Sign Language Help">🤟 Sign</button>
-    </div>
-
-    <script>
-        const FLASK_URLS = {
-            home: "{{ url_for('home') }}",
-            login: "{{ url_for('login') }}",
-            admin: "{{ url_for('admin') }}",
-            cart: "{{ url_for('cart') }}",
-            checkout: "{{ url_for('checkout') }}",
-            order: "{{ url_for('order') }}",
-            track: "{{ url_for('track') }}",
-            product: "{{ url_for('product') }}",
-            mobile: "{{ url_for('mobile') }}",
-            laptop: "{{ url_for('laptop') }}",
-            watch: "{{ url_for('watch') }}",
-            earbuds: "{{ url_for('earbuds') }}",
-            speaker: "{{ url_for('speaker') }}"
-        };
-    </script>
-
-    <script src="{{ url_for('static', filename='accessease.js') }}"></script>
-
-</body>
-
-</html>
+{% block extra_js %}
+<script>
+function togglePw(id) {
+  const i = document.getElementById(id), e = document.getElementById('pw-eye-' + id);
+  if (i.type === 'password') { i.type = 'text'; e.className = 'fas fa-eye-slash text-muted'; }
+  else { i.type = 'password'; e.className = 'fas fa-eye text-muted'; }
+}
+document.getElementById('password').addEventListener('input', function() {
+  const el = document.getElementById('pw-strength'), v = this.value;
+  let s = 0;
+  if (v.length >= 6) s++; if (/[A-Z]/.test(v)) s++; if (/[0-9]/.test(v)) s++; if (/[^A-Za-z0-9]/.test(v)) s++;
+  const [msg, c] = s <= 1 ? ['Weak','var(--danger)'] : s === 2 ? ['Fair','var(--warning)'] : s === 3 ? ['Good','var(--info)'] : ['Strong','var(--success)'];
+  el.innerHTML = v ? `<span style="color:${c};font-weight:600;">${msg} password</span>` : '';
+});
+</script>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "admin/base.html" %}
+{% block title %}Order #{{ order.id }}{% endblock %}
+{% block page_title %}Order #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <!-- Items & Address -->
+  <div class="col-lg-8">
+    <div class="card-ae mb-4">
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <span><i class="fas fa-box me-2 text-primary"></i>Order Items</span>
+        <span class="badge-status badge-{{ order.status }}">{{ order.status }}</span>
+      </div>
+      <div class="p-4">
+        {% for item in items %}
+        <div class="d-flex align-items-center gap-3 {% if not loop.last %}border-bottom pb-3 mb-3{% endif %}" style="border-color:var(--border)!important;">
+          <img src="{{ item.product_img or item.image_url or 'https://via.placeholder.com/60' }}" alt=""
+               style="width:60px;height:60px;object-fit:contain;border-radius:8px;background:#f8fafc;border:1px solid var(--border);padding:6px;flex-shrink:0;">
+          <div class="flex-1">
+            <div class="fw-bold" style="font-size:0.9rem;">{{ item.name }}</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);">Qty: {{ item.quantity }} × ₹{{ "{:,.0f}".format(item.price) }}</div>
+          </div>
+          <div class="fw-bold">₹{{ "{:,.0f}".format(item.price * item.quantity) }}</div>
+        </div>
+        {% endfor %}
+        <div class="mt-3 pt-3 border-top d-flex justify-content-end" style="border-color:var(--border)!important;">
+          <div class="text-end">
+            <div style="font-size:1.1rem;font-weight:800;">Total: ₹{{ "{:,.0f}".format(order.total_amount) }}</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">Payment: {{ order.payment_method }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-ae">
+      <div class="card-header"><i class="fas fa-user me-2 text-primary"></i>Customer & Shipping</div>
+      <div class="p-4 row g-3" style="font-size:0.88rem;">
+        <div class="col-sm-6">
+          <div style="color:var(--text-muted);font-size:0.75rem;font-weight:700;text-transform:uppercase;margin-bottom:4px;">Customer</div>
+          <div class="fw-bold">{{ order.user_name }}</div>
+          <div style="color:var(--text-muted);">{{ order.user_email }}</div>
+          {% if order.user_phone %}<div>{{ order.user_phone }}</div>{% endif %}
+        </div>
+        <div class="col-sm-6">
+          <div style="color:var(--text-muted);font-size:0.75rem;font-weight:700;text-transform:uppercase;margin-bottom:4px;">Ship To</div>
+          <div class="fw-bold">{{ order.shipping_name }}</div>
+          <div>{{ order.shipping_address }}</div>
+          <div>{{ order.shipping_city }}, {{ order.shipping_state }} – {{ order.shipping_pincode }}</div>
+          <div>{{ order.shipping_phone }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Update status -->
+  <div class="col-lg-4">
+    <div class="card-ae mb-4">
+      <div class="card-header"><i class="fas fa-sync me-2 text-primary"></i>Update Status</div>
+      <div class="p-4">
+        <form method="POST" action="{{ url_for('admin_update_order_status', order_id=order.id) }}">
+          <div class="mb-3">
+            <label class="form-label">New Status</label>
+            <select name="status" class="form-select">
+              {% for s in ['pending','processing','shipped','delivered','cancelled'] %}
+              <option value="{{ s }}" {% if s == order.status %}selected{% endif %} style="text-transform:capitalize;">{{ s }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="fas fa-save me-2"></i>Update Status
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card-ae">
+      <div class="card-header"><i class="fas fa-info-circle me-2 text-primary"></i>Order Info</div>
+      <div class="p-4" style="font-size:0.85rem;">
+        <div class="d-flex justify-content-between py-1"><span style="color:var(--text-muted);">Order ID:</span> <strong>#{{ order.id }}</strong></div>
+        <div class="d-flex justify-content-between py-1"><span style="color:var(--text-muted);">Placed:</span> <span>{{ order.created_at.strftime('%d %b %Y, %I:%M %p') if order.created_at else '' }}</span></div>
+        <div class="d-flex justify-content-between py-1"><span style="color:var(--text-muted);">Updated:</span> <span>{{ order.updated_at.strftime('%d %b %Y') if order.updated_at else '' }}</span></div>
+        <div class="d-flex justify-content-between py-1"><span style="color:var(--text-muted);">Total:</span> <strong>₹{{ "{:,.0f}".format(order.total_amount) }}</strong></div>
+      </div>
+    </div>
+
+    <a href="{{ url_for('admin_orders') }}" class="btn btn-outline-secondary w-100 mt-3">
+      <i class="fas fa-arrow-left me-2"></i>Back to Orders
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container-xl">
+    <h1><i class="fas fa-user-circle me-2"></i>My Profile</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+        <li class="breadcrumb-item active">Profile</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container-xl px-3 px-md-4 pb-5">
+  <div class="row g-4">
+
+    <!-- Left — Profile info -->
+    <div class="col-lg-4">
+      <div class="card-ae p-4 text-center mb-4">
+        <div style="width:80px;height:80px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:2rem;font-weight:800;color:#fff;">
+          {{ user.name[0].upper() if user and user.name else 'U' }}
+        </div>
+        <h5 class="fw-bold mb-1">{{ user.name }}</h5>
+        <p class="text-muted small mb-3">{{ user.email }}</p>
+        <div class="d-grid gap-2">
+          <a href="{{ url_for('orders') }}" class="btn btn-outline-primary btn-sm">
+            <i class="fas fa-box me-2"></i>My Orders
+          </a>
+          <a href="{{ url_for('wishlist') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="far fa-heart me-2"></i>Wishlist
+          </a>
+        </div>
+      </div>
+
+      <!-- Recent orders -->
+      {% if orders %}
+      <div class="card-ae">
+        <div class="card-header">Recent Orders</div>
+        <div class="p-3">
+          {% for o in orders %}
+          <a href="{{ url_for('order_detail', order_id=o.id) }}" class="d-flex align-items-center justify-content-between py-2 text-decoration-none {% if not loop.last %}border-bottom{% endif %}" style="border-color:var(--border)!important;">
+            <div>
+              <div style="font-size:0.83rem;font-weight:600;color:var(--text-primary);">#{{ o.id }}</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);">{{ o.created_at.strftime('%d %b %Y') if o.created_at else '' }}</div>
+            </div>
+            <div class="text-end">
+              <div style="font-size:0.83rem;font-weight:700;">₹{{ "{:,.0f}".format(o.total_amount) }}</div>
+              <span class="badge-status badge-{{ o.status }}">{{ o.status }}</span>
+            </div>
+          </a>
+          {% endfor %}
+          <a href="{{ url_for('orders') }}" class="btn btn-outline-primary btn-sm w-100 mt-3">View All Orders</a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Right — Edit forms -->
+    <div class="col-lg-8">
+      <!-- Edit profile -->
+      <div class="card-ae mb-4">
+        <div class="card-header"><i class="fas fa-edit me-2 text-primary"></i>Edit Profile</div>
+        <div class="p-4">
+          <form method="POST" novalidate>
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="name" class="form-control" value="{{ user.name or '' }}" required>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Phone</label>
+                <input type="tel" name="phone" class="form-control" value="{{ user.phone or '' }}" placeholder="+91 XXXXX XXXXX">
+              </div>
+              <div class="col-12">
+                <label class="form-label">Address</label>
+                <textarea name="address" class="form-control" rows="2">{{ user.address or '' }}</textarea>
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label">City</label>
+                <input type="text" name="city" class="form-control" value="{{ user.city or '' }}">
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label">State</label>
+                <input type="text" name="state" class="form-control" value="{{ user.state or '' }}">
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label">PIN Code</label>
+                <input type="text" name="pincode" class="form-control" value="{{ user.pincode or '' }}" maxlength="6">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3 px-4">
+              <i class="fas fa-save me-2"></i>Save Changes
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Change password -->
+      <div class="card-ae">
+        <div class="card-header"><i class="fas fa-lock me-2 text-primary"></i>Change Password</div>
+        <div class="p-4">
+          <form method="POST" action="{{ url_for('change_password') }}" novalidate>
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">Current Password</label>
+                <input type="password" name="old_password" class="form-control" required placeholder="Current password">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">New Password</label>
+                <input type="password" name="new_password" class="form-control" required minlength="6" placeholder="New password (min 6 chars)">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Confirm New Password</label>
+                <input type="password" name="confirm_password" class="form-control" required placeholder="Repeat new password">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-warning mt-3 px-4">
+              <i class="fas fa-key me-2"></i>Change Password
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

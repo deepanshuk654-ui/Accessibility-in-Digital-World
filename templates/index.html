@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}Home — Shop Electronics with Accessibility{% endblock %}
+
+{% block content %}
+
+<!-- ══ HERO SECTION ══ -->
+<div class="container-xl px-3 px-md-4 mt-3">
+  <div class="hero-banner mb-4">
+    <div class="hero-content">
+      <span class="badge-pill">♿ Accessibility First</span>
+      <h1>Shop Electronics<br><span>Made for Everyone</span></h1>
+      <p>India's most accessible e-commerce platform — with dark mode, voice search, screen reader support, and more.</p>
+      <div class="d-flex gap-3 flex-wrap">
+        <a href="{{ url_for('products') }}" class="btn btn-warning btn-lg fw-bold px-4">
+          <i class="fas fa-shopping-bag me-2"></i>Shop Now
+        </a>
+        <a href="{{ url_for('search') }}" class="btn btn-outline-light btn-lg px-4">
+          <i class="fas fa-search me-2"></i>Search Products
+        </a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="https://t4.ftcdn.net/jpg/06/91/17/95/360_F_691179587_QSctAaNAIbYMjexjEV3w8clmvzcXmJuU.jpg"
+           alt="Electronics showcase" loading="lazy">
+    </div>
+  </div>
+
+  <!-- Mini Banners -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+      <div class="mini-banner mini-banner-dark">
+        <div class="mini-banner-icon"><i class="fas fa-mobile-alt"></i></div>
+        <div>
+          <h4>Mobiles</h4>
+          <p>Latest smartphones</p>
+          <a href="{{ url_for('mobile') }}" class="btn btn-sm btn-outline-light mt-1">Explore</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="mini-banner mini-banner-amber">
+        <div class="mini-banner-icon"><i class="fas fa-laptop"></i></div>
+        <div>
+          <h4>Laptops</h4>
+          <p>Work & gaming</p>
+          <a href="{{ url_for('laptop') }}" class="btn btn-sm btn-outline-light mt-1">Explore</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="mini-banner mini-banner-teal">
+        <div class="mini-banner-icon"><i class="fas fa-headphones"></i></div>
+        <div>
+          <h4>Earbuds</h4>
+          <p>True wireless audio</p>
+          <a href="{{ url_for('earbuds') }}" class="btn btn-sm btn-outline-light mt-1">Explore</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="mini-banner mini-banner-rose">
+        <div class="mini-banner-icon"><i class="fas fa-volume-up"></i></div>
+        <div>
+          <h4>Speakers</h4>
+          <p>Bluetooth audio</p>
+          <a href="{{ url_for('speaker') }}" class="btn btn-sm btn-outline-light mt-1">Explore</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FEATURED PRODUCTS ══ -->
+  {% if featured %}
+  <section aria-label="Featured products" class="mb-5">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h2 class="section-title mb-0">⭐ Featured Products</h2>
+      <a href="{{ url_for('products') }}" class="btn btn-outline-primary btn-sm">View All</a>
+    </div>
+    <div class="row g-3">
+      {% for p in featured %}
+      <div class="col-xl-3 col-lg-4 col-sm-6">
+        {% include '_product_card.html' %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ══ MOBILES ══ -->
+  {% if mobiles %}
+  <section aria-label="Mobile phones" class="mb-5">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h2 class="section-title mb-0"><i class="fas fa-mobile-alt me-2" style="color:var(--primary)"></i>Mobiles</h2>
+      <a href="{{ url_for('mobile') }}" class="btn btn-outline-primary btn-sm">See All</a>
+    </div>
+    <div class="products-scroll" role="list">
+      {% for p in mobiles %}
+      <div role="listitem">{% include '_product_card.html' %}</div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ══ LAPTOPS ══ -->
+  {% if laptops %}
+  <section aria-label="Laptops" class="mb-5">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h2 class="section-title mb-0"><i class="fas fa-laptop me-2" style="color:var(--primary)"></i>Laptops</h2>
+      <a href="{{ url_for('laptop') }}" class="btn btn-outline-primary btn-sm">See All</a>
+    </div>
+    <div class="products-scroll" role="list">
+      {% for p in laptops %}
+      <div role="listitem">{% include '_product_card.html' %}</div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ══ EARBUDS ══ -->
+  {% if earbuds %}
+  <section aria-label="Earbuds" class="mb-5">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h2 class="section-title mb-0"><i class="fas fa-headphones me-2" style="color:var(--primary)"></i>Earbuds</h2>
+      <a href="{{ url_for('earbuds') }}" class="btn btn-outline-primary btn-sm">See All</a>
+    </div>
+    <div class="products-scroll" role="list">
+      {% for p in earbuds %}
+      <div role="listitem">{% include '_product_card.html' %}</div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ══ SPEAKERS ══ -->
+  {% if speakers %}
+  <section aria-label="Speakers" class="mb-5">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h2 class="section-title mb-0"><i class="fas fa-volume-up me-2" style="color:var(--primary)"></i>Speakers</h2>
+      <a href="{{ url_for('speaker') }}" class="btn btn-outline-primary btn-sm">See All</a>
+    </div>
+    <div class="products-scroll" role="list">
+      {% for p in speakers %}
+      <div role="listitem">{% include '_product_card.html' %}</div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ══ ACCESSIBILITY FEATURES HIGHLIGHT ══ -->
+  <section class="mb-5" aria-label="Accessibility features">
+    <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);border-radius:16px;padding:40px;color:#fff;">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <h2 class="fw-800 mb-3" style="font-weight:800;">Built for <span style="color:var(--secondary)">Every User</span></h2>
+          <p style="color:rgba(255,255,255,0.75);font-size:1.05rem;margin-bottom:24px;">
+            AccessEase 2.0 is designed with universal accessibility — supporting users with visual, hearing, motor, and cognitive disabilities.
+          </p>
+          <div class="row g-3">
+            {% set features = [
+              ('fa-moon','Dark Mode','Reduces eye strain in low-light environments'),
+              ('fa-adjust','High Contrast','Enhanced readability for low-vision users'),
+              ('fa-font','Text Resize','Scale text from 12px to 26px with A+/A- controls'),
+              ('fa-volume-up','Screen Reader','Full TTS support — reads any page aloud'),
+              ('fa-microphone','Voice Search','Navigate and search using only your voice'),
+              ('fa-keyboard','Keyboard Nav','Complete keyboard navigation with Alt shortcuts'),
+            ] %}
+            {% for icon, title, desc in features %}
+            <div class="col-sm-6">
+              <div style="display:flex;align-items:flex-start;gap:12px;">
+                <div style="width:40px;height:40px;background:rgba(255,153,0,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <i class="fas {{ icon }}" style="color:var(--secondary);"></i>
+                </div>
+                <div>
+                  <div style="font-weight:700;font-size:0.9rem;">{{ title }}</div>
+                  <div style="font-size:0.78rem;color:rgba(255,255,255,0.6);">{{ desc }}</div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="col-lg-5 text-center mt-4 mt-lg-0">
+          <div style="font-size:7rem;opacity:0.9;">♿</div>
+          <p style="color:rgba(255,255,255,0.6);font-size:0.9rem;">Click the <strong style="color:#fff;">♿ button</strong> (bottom right)<br>to open the accessibility toolbar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
